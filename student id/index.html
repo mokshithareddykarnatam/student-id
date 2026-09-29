@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joy University - Official Student ID Card</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="app-header">
+    <a href="dashboard.html" class="brand-section">
+        <div class="brand-logo">JU</div>
+        <div class="brand-text">
+            <h1>Joy University</h1>
+            <span>Smart Identity Card System</span>
+        </div>
+    </a>
+
+    <div class="header-actions">
+        <!-- Quick Student Switcher for Prototype Evaluation -->
+        <select id="quickStudentSelector" onchange="switchViewingStudent(this.value)" style="padding: 7px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.35); background: rgba(255,255,255,0.18); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; outline: none;">
+            <!-- Options dynamically loaded -->
+        </select>
+
+        <a href="dashboard.html#helpdeskSection" class="btn btn-outline-white btn-icon" title="Raise query or issue with admin">
+            💬 Helpdesk & Queries
+        </a>
+        <a href="dashboard.html" class="btn btn-secondary btn-icon">
+            ← Dashboard
+        </a>
+        <a href="admin.html" class="btn btn-gold btn-icon">
+            🛡️ Admin Directory
+        </a>
+        <button class="btn btn-danger btn-icon" onclick="Auth.logout()">
+            Sign Out
+        </button>
+    </div>
+</header>
+
+<main class="main-content">
+
+    <div class="banner-panel" id="pageBannerPanel" style="padding: 16px 22px; border-left-color: #003b80; transition: border-color 0.3s ease;">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 12px;">
+            <div>
+                <h2 id="bannerTitle" style="font-size: 20px; color: #003b80; transition: color 0.3s ease;">Official Joy University Student ID Card (Portrait View)</h2>
+                <p id="bannerDesc" style="color: #64748b; font-size: 13.5px; margin-top: 3px;">Interactive 3D Flippable card with verified institutional specifications and lanyard bezel holder.</p>
+            </div>
+            <div id="studentThemeBadge" style="background: #eff6ff; color: #003b80; border: 1px solid #bfdbfe; padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 12px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                ⭐ DAYSCHOLAR (Navy Blue Card)
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN ID CARD VIEWER (3D FLIP + SIDE-BY-SIDE MODE) -->
+    <div class="card-viewer-container">
+
+        <!-- INTERACTION CONTROLS BAR -->
+        <div class="controls-bar" style="margin-bottom: 8px;">
+            <button class="btn btn-navy" id="flipActionBtn" onclick="toggleCardFlip()" style="font-size: 14.5px; padding: 10px 22px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                <span id="flipBtnText">🔄 Flip Card (Front / Back)</span>
+            </button>
+
+            <button class="btn btn-secondary" id="viewModeBtn" onclick="toggleViewMode()" style="padding: 10px 18px;">
+                📑 Switch to Side-by-Side View
+            </button>
+
+            <label for="idPhotoUploadInput" class="btn btn-secondary" style="cursor: pointer; padding: 10px 18px;">
+                📷 Upload Photo
+                <input type="file" id="idPhotoUploadInput" accept="image/*" style="display: none;" onchange="handleCardPhotoUpload(event)">
+            </label>
+
+            <button class="btn btn-gold" onclick="downloadIdCardImages()" style="padding: 10px 18px;">
+                💾 Save High-Res Image
+            </button>
+
+            <button class="btn btn-secondary" onclick="window.print()" style="padding: 10px 18px;">
+                🖨️ Print (CR80)
+            </button>
+        </div>
+
+        <div class="card-display-wrapper" id="cardDisplayWrapper">
+            
+            <!-- 3D FLIPPABLE CONTAINER (PORTRAIT CR80 WITH LANYARD HOLDER) -->
+            <div class="card-perspective-box card-theme-navy" id="cardPerspectiveBox" onclick="handleCardClick(event)" title="Click card to flip between Front and Back">
+                <div class="card-flipper" id="cardFlipper">
+
+                    <!-- ================= CARD FRONT (EXACT MATCH TO USER PHOTO media_1790251775943.jpg) ================= -->
+                    <div class="card-flip-face face-front" id="cardFrontFaceWrap">
+                        <div class="card-holder-frame">
+                            <div class="holder-lanyard-slot" title="Lanyard Attachment Slot"></div>
+
+                            <div class="card-badge card-front" id="cardFrontBadge">
+                                <!-- Top Geometric Ribbons -->
+                                <div class="card-front-top-ribbon-1"></div>
+                                <div class="card-front-top-ribbon-2"></div>
+                                <div class="card-front-mid-ribbon"></div>
+                                <div class="card-front-bot-ribbon"></div>
+
+                                <!-- OFFICIAL JOY UNIVERSITY LOGO -->
+                                <div class="ju-official-logo">
+                                    <div class="ju-logo-emblem">
+                                        <svg viewBox="0 0 34 38" width="30" height="34" id="juEmblemSvg">
+                                            <!-- Stylized J-curve with dynamic theme color -->
+                                            <path id="juEmblemPathJ" d="M 13 3 L 13 25 C 13 30, 10 33, 6 33 C 2 33, 0.5 30, 0.5 26.5 L 6.5 26.5 C 6.5 27.8, 7.2 28.5, 8.2 28.5 C 9.2 28.5, 9.8 27.8, 9.8 25.5 L 9.8 3 Z" fill="#003b80"/>
+                                            <!-- Dark Grey U-shape -->
+                                            <path d="M 16 3 L 19.5 3 L 19.5 25.5 C 19.5 27.8, 20.2 28.5, 21.2 28.5 C 22.2 28.5, 22.8 27.8, 22.8 26.5 L 28.8 26.5 C 28.8 30, 27 33, 23 33 C 19 33, 16 30, 16 25 Z" fill="#475569"/>
+                                            <rect x="22.5" y="3" width="6.3" height="23.5" fill="#475569"/>
+                                        </svg>
+                                    </div>
+                                    <div class="ju-logo-title">JOY UNIVERSITY</div>
+                                    <div class="ju-logo-underline"></div>
+                                </div>
+
+                                <!-- Centered Photo Frame -->
+                                <div class="front-photo-container">
+                                    <div class="front-photo-frame">
+                                        <img id="cardPhotoImg" src="" alt="Student Photo">
+                                    </div>
+                                </div>
+
+                                <!-- Student Details Block -->
+                                <div class="front-details-block">
+                                    <div class="front-student-name" id="cardName">GONGITI AHALYA</div>
+                                    <div class="front-student-id" id="cardStudentId">2025BTAM424</div>
+                                    <div class="front-school-name" id="cardSchool">School of Computational Intelligence</div>
+                                </div>
+
+                                <!-- Registrar Green Signature Block -->
+                                <div class="front-signature-block">
+                                    <svg viewBox="0 0 100 35" width="85" height="28" style="display:block; margin: 0 auto -2px auto;">
+                                        <path d="M 12 24 C 22 8, 28 32, 38 14 C 48 4, 50 26, 60 18 C 68 14, 78 20, 92 16" stroke="#10b981" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M 30 22 C 45 22, 60 24, 80 23" stroke="#10b981" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+                                    </svg>
+                                    <div class="sig-registrar-text">Registrar</div>
+                                    <div class="sig-authority-text">ISSUING AUTHORITY</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= CARD BACK (EXACT MATCH TO USER PHOTO media_1790165440845.jpg) ================= -->
+                    <div class="card-flip-face face-back" id="cardBackFaceWrap">
+                        <div class="card-holder-frame">
+                            <div class="holder-lanyard-slot" title="Lanyard Attachment Slot"></div>
+
+                            <div class="card-badge card-back" id="cardBackBadge">
+                                <!-- Top Accent Ribbon -->
+                                <div class="back-top-ribbon-1"></div>
+
+                                <!-- Top Category / Hostel Banner Bar -->
+                                <div class="back-hostel-banner" id="cardBackBanner">
+                                    <span id="cardBannerText">Category : DAYSCHOLAR</span>
+                                </div>
+
+                                <!-- Details Block (Batch, Blood Group, DOB, Address) -->
+                                <div class="back-details-section">
+                                    <table class="back-info-table">
+                                        <tr>
+                                            <td class="lbl">Batch</td>
+                                            <td class="sep">:</td>
+                                            <td class="val" id="cardBatch">2025-26</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Blood Group</td>
+                                            <td class="sep">:</td>
+                                            <td class="val" id="cardBloodGroup">O+</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Date of Birth</td>
+                                            <td class="sep">:</td>
+                                            <td class="val" id="cardDOB">15/03/2007</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Address</td>
+                                            <td class="sep">:</td>
+                                            <td class="val" id="cardAddress">7 90, EDULAPALLI, MUDIGUBBA, ANANTAPUR 515511</td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <!-- INSTRUCTIONS Section (Exact text from photo) -->
+                                <div class="back-instructions-section">
+                                    <div class="back-heading-theme">INSTRUCTIONS</div>
+                                    <ul class="back-instruction-bullets">
+                                        <li>
+                                            <span class="bullet-dot">•</span>
+                                            <span>This Identity Card is non-transferable.</span>
+                                        </li>
+                                        <li>
+                                            <span class="bullet-dot">•</span>
+                                            <span>If this ID card is lost/found kindly return to theissuing authority.</span>
+                                        </li>
+                                        <li>
+                                            <span class="bullet-dot">•</span>
+                                            <span>This card must be worn visibly by studentduring his or her presence in JoyUniversity premises. It must be shown toauthorizedpersonnel as and whenrequested.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- CONTACT Section (Exact text from photo) -->
+                                <div class="back-contact-section">
+                                    <div class="back-heading-theme">CONTACT</div>
+                                    <div class="back-contact-row">
+                                        <span class="contact-theme-icon">📞</span>
+                                        <span id="cardContactPhone">+91 4637 - 231812</span>
+                                    </div>
+                                    <div class="back-contact-row">
+                                        <span class="contact-theme-icon">✉️</span>
+                                        <span id="cardContactEmail">oor@joyuniversity.edu.in</span>
+                                    </div>
+                                </div>
+
+                                <!-- Barcode Section -->
+                                <div class="back-barcode-container">
+                                    <div id="cardBarcodeSvg">
+                                        <!-- Dynamic Code-128 SVG Barcode -->
+                                    </div>
+                                    <div class="back-bottom-ribbon"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="flip-hint-badge" id="flipHintBadge">
+                👆 <strong>Click on the card</strong> or click <strong>"🔄 Flip Card"</strong> to rotate between Front and Back (3D Smooth Flip)
+            </div>
+
+            <div style="margin-top: 14px; text-align: center;">
+                <a href="dashboard.html#helpdeskSection" class="btn btn-secondary btn-sm" style="background: rgba(255,255,255,0.95); border: 1.5px solid #cbd5e1; box-shadow: var(--shadow-sm); font-size: 13px; color: var(--primary);">
+                    💬 Have an issue with your address or ID details? <strong>Contact Admin / Raise Query →</strong>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+<script src="script.js"></script>
+<script>
+    let currentStudent = null;
+
+    // Load active session or fallback to default student
+    function initCard() {
+        const session = Storage.getSession();
+        let studentId = session.userId;
+
+        // Populate student switcher dropdown with clear Theme indicators
+        const allStudents = Storage.getAllStudents();
+        const switcher = document.getElementById("quickStudentSelector");
+        switcher.innerHTML = "";
+        
+        allStudents.forEach(st => {
+            const opt = document.createElement("option");
+            opt.value = st.studentId;
+            const isAhalya = (st.studentId === "2025BTAM424" || (st.name && st.name.toUpperCase().includes("AHALYA")));
+            const themeTag = isAhalya ? "⭐ [DAYSCHOLAR - Navy Blue Card]" : "[HOSTEL - Red Card]";
+            opt.textContent = `${st.name} (${st.studentId}) ${themeTag}`;
+            if (studentId && st.studentId.toLowerCase() === studentId.toLowerCase()) {
+                opt.selected = true;
+            }
+            switcher.appendChild(opt);
+        });
+
+        // Default to Ahalya first if no specific student is active
+        if (!studentId || !Storage.getStudentById(studentId)) {
+            studentId = "2025BTAM424"; // Gongiti Ahalya
+            Storage.setSession(studentId, 'student');
+            if (switcher.value !== studentId) {
+                switcher.value = studentId;
+            }
+        }
+
+        loadStudentCard(studentId);
+
+        // Check if print query parameter is present
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get("action") === "print") {
+            setTimeout(() => window.print(), 600);
+        }
+    }
+
+    function loadStudentCard(studentId) {
+        currentStudent = Storage.getStudentById(studentId);
+        if (!currentStudent) return;
+
+        // Check if viewing Gongiti Ahalya (Dayscholar with Navy Blue Card)
+        const isAhalya = (currentStudent.studentId === "2025BTAM424" || 
+                          currentStudent.cardTheme === "navy" || 
+                          (currentStudent.name && currentStudent.name.toUpperCase().includes("AHALYA")));
+
+        const cardBox = document.getElementById("cardPerspectiveBox");
+        const juEmblemPath = document.getElementById("juEmblemPathJ");
+        const bannerPanel = document.getElementById("pageBannerPanel");
+        const bannerTitle = document.getElementById("bannerTitle");
+        const themeBadge = document.getElementById("studentThemeBadge");
+        const flipBtn = document.getElementById("flipActionBtn");
+
+        if (isAhalya) {
+            // Apply Navy Blue Theme ONLY for Gongiti Ahalya
+            cardBox.classList.remove("card-theme-red");
+            cardBox.classList.add("card-theme-navy");
+
+            juEmblemPath.setAttribute("fill", "#003b80");
+            bannerPanel.style.borderLeftColor = "#003b80";
+            bannerTitle.style.color = "#003b80";
+            bannerTitle.textContent = "Joy University Student ID Card (Dayscholar Edition)";
+            
+            themeBadge.style.background = "#eff6ff";
+            themeBadge.style.color = "#003b80";
+            themeBadge.style.borderColor = "#bfdbfe";
+            themeBadge.innerHTML = "⭐ DAYSCHOLAR (Navy Blue Card)";
+
+            flipBtn.className = "btn btn-navy";
+            document.getElementById("cardBannerText").textContent = "Category : DAYSCHOLAR";
+        } else {
+            // Apply University Red Theme for Hostellers / Other students
+            cardBox.classList.remove("card-theme-navy");
+            cardBox.classList.add("card-theme-red");
+
+            juEmblemPath.setAttribute("fill", "#b91c1c");
+            bannerPanel.style.borderLeftColor = "#b91c1c";
+            bannerTitle.style.color = "#b91c1c";
+            bannerTitle.textContent = "Joy University Student ID Card (Hosteller Edition)";
+
+            themeBadge.style.background = "#fee2e2";
+            themeBadge.style.color = "#991b1b";
+            themeBadge.style.borderColor = "#fca5a5";
+            themeBadge.innerHTML = "● HOSTEL (DEVASAHAYAM - Red Card)";
+
+            flipBtn.className = "btn btn-red";
+            document.getElementById("cardBannerText").textContent = "Hostel Name : " + (currentStudent.hostel || "DEVASAHAYAM");
+        }
+
+        // Populate Front Details (matching physical card)
+        document.getElementById("cardName").textContent = currentStudent.name.toUpperCase();
+        document.getElementById("cardStudentId").textContent = currentStudent.studentId;
+        document.getElementById("cardSchool").textContent = currentStudent.school || currentStudent.department || "School of Computational Intelligence";
+
+        // Populate Back Details (matching physical card)
+        document.getElementById("cardBatch").textContent = currentStudent.batch || "2025-26";
+        document.getElementById("cardBloodGroup").textContent = currentStudent.bloodGroup || "O+";
+        document.getElementById("cardDOB").textContent = currentStudent.dob;
+        document.getElementById("cardAddress").textContent = currentStudent.address || "7 90, EDULAPALLI, MUDIGUBBA, ANANTAPUR 515511";
+        document.getElementById("cardContactPhone").textContent = currentStudent.phone || "+91 4637 - 231812";
+        document.getElementById("cardContactEmail").textContent = currentStudent.email || "oor@joyuniversity.edu.in";
+
+        // Photo loading (strictly constrained so it never overflows)
+        const photo = Storage.getPhoto(currentStudent.studentId);
+        const photoImg = document.getElementById("cardPhotoImg");
+        photoImg.src = photo || generateSvgAvatar(currentStudent.name);
+
+        // Barcode generation
+        document.getElementById("cardBarcodeSvg").innerHTML = generateBarcodeSvg(currentStudent.studentId);
+    }
+
+    // Interactive Card Flip Logic
+    function handleCardClick(event) {
+        // If in side-by-side mode, don't flip on click
+        const wrapper = document.getElementById("cardDisplayWrapper");
+        if (wrapper.classList.contains("side-by-side-mode")) return;
+        toggleCardFlip();
+    }
+
+    function toggleCardFlip() {
+        const flipper = document.getElementById("cardFlipper");
+        flipper.classList.toggle("is-flipped");
+        const isFlipped = flipper.classList.contains("is-flipped");
+        document.getElementById("flipBtnText").textContent = isFlipped ? "🔄 Flip to Front Side" : "🔄 Flip to Back Side";
+    }
+
+    function toggleViewMode() {
+        const wrapper = document.getElementById("cardDisplayWrapper");
+        const isSideBySide = wrapper.classList.toggle("side-by-side-mode");
+        const modeBtn = document.getElementById("viewModeBtn");
+        const flipBtn = document.getElementById("flipActionBtn");
+        const hint = document.getElementById("flipHintBadge");
+
+        if (isSideBySide) {
+            modeBtn.textContent = "🎴 Switch to 3D Flip Mode";
+            flipBtn.style.display = "none";
+            hint.innerHTML = "📄 <strong>Side-by-Side Mode</strong>: Both Front and Back card faces visible simultaneously";
+        } else {
+            modeBtn.textContent = "📑 Switch to Side-by-Side View";
+            flipBtn.style.display = "inline-flex";
+            hint.innerHTML = "👆 <strong>Click on the card</strong> or click <strong>'🔄 Flip Card'</strong> to rotate between Front and Back (3D Smooth Flip)";
+        }
+    }
+
+    function switchViewingStudent(newId) {
+        Storage.setSession(newId, 'student');
+        loadStudentCard(newId);
+    }
+
+    function handleCardPhotoUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            alert("Please select a valid image file.");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            const photoData = evt.target.result;
+            Storage.savePhoto(currentStudent.studentId, photoData);
+            document.getElementById("cardPhotoImg").src = photoData;
+            alert("Photo saved successfully for " + currentStudent.name);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // High-Resolution HTML5 Canvas Card Image Downloader (Portrait Side-by-Side Format)
+    function downloadIdCardImages() {
+        if (!currentStudent) return;
+
+        const isAhalya = (currentStudent.studentId === "2025BTAM424" || 
+                          currentStudent.cardTheme === "navy" || 
+                          (currentStudent.name && currentStudent.name.toUpperCase().includes("AHALYA")));
+
+        const themePrimary = isAhalya ? "#003b80" : "#b91c1c";
+        const themeDark = isAhalya ? "#001f44" : "#881337";
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const scale = 2; // High-DPI 2x
+        const cardW = 340;
+        const cardH = 510;
+        
+        canvas.width = (cardW * 2 + 70) * scale;
+        canvas.height = (cardH + 70) * scale;
+        ctx.scale(scale, scale);
+
+        // Canvas Background
+        ctx.fillStyle = "#f8fafc";
+        ctx.fillRect(0, 0, cardW * 2 + 70, cardH + 70);
+
+        // Draw Front Card on Left
+        drawFrontCardCanvas(ctx, 25, 25, cardW, cardH, currentStudent, themePrimary, themeDark);
+        // Draw Back Card on Right
+        drawBackCardCanvas(ctx, cardW + 45, 25, cardW, cardH, currentStudent, themePrimary, isAhalya);
+
+        // Title text at bottom
+        ctx.fillStyle = "#64748b";
+        ctx.font = "bold 12px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(`Joy University Official Student Identity Card • ${currentStudent.name} (${currentStudent.studentId})`, (cardW * 2 + 70) / 2, cardH + 52);
+
+        // Trigger Download
+        const link = document.createElement("a");
+        link.download = `ID_Card_${currentStudent.studentId}_${currentStudent.name.replace(/\s+/g, '_')}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    }
+
+    function drawFrontCardCanvas(ctx, x, y, w, h, student, themeColor, themeDark) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, 16);
+        ctx.clip();
+
+        // White background
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(x, y, w, h);
+
+        // Top ribbons
+        ctx.fillStyle = themeColor;
+        ctx.beginPath();
+        ctx.moveTo(x + w, y);
+        ctx.lineTo(x + w - 85, y);
+        ctx.lineTo(x + w, y + 52);
+        ctx.fill();
+
+        ctx.fillStyle = isAhalyaColor(themeColor) ? "rgba(2, 132, 199, 0.55)" : "rgba(239, 68, 68, 0.55)";
+        ctx.beginPath();
+        ctx.moveTo(x + w, y);
+        ctx.lineTo(x + w - 120, y);
+        ctx.lineTo(x + w, y + 38);
+        ctx.fill();
+
+        // Mid-left ribbon
+        ctx.fillStyle = themeColor;
+        ctx.beginPath();
+        ctx.moveTo(x, y + 155);
+        ctx.lineTo(x + 44, y + 179);
+        ctx.lineTo(x, y + 203);
+        ctx.fill();
+
+        // Bottom ribbon
+        ctx.fillStyle = themeColor;
+        ctx.beginPath();
+        ctx.moveTo(x, y + h - 16);
+        ctx.lineTo(x + w, y + h - 36);
+        ctx.lineTo(x + w, y + h);
+        ctx.lineTo(x, y + h);
+        ctx.fill();
+
+        // Logo Emblem
+        ctx.fillStyle = themeColor;
+        ctx.fillRect(x + w/2 - 12, y + 18, 9, 20);
+        ctx.fillStyle = "#475569";
+        ctx.fillRect(x + w/2 + 2, y + 18, 9, 20);
+
+        ctx.fillStyle = "#1e293b";
+        ctx.font = "bold 16px 'Times New Roman', serif";
+        ctx.textAlign = "center";
+        ctx.fillText("JOY UNIVERSITY", x + w/2, y + 54);
+
+        ctx.strokeStyle = "#cbd5e1";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(x + 30, y + 62);
+        ctx.lineTo(x + w - 30, y + 62);
+        ctx.stroke();
+
+        // Photo Frame
+        const px = x + w/2 - 61;
+        const py = y + 78;
+        ctx.fillStyle = "#f8fafc";
+        ctx.fillRect(px, py, 122, 145);
+        ctx.strokeStyle = "#94a3b8";
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(px, py, 122, 145);
+
+        const img = document.getElementById("cardPhotoImg");
+        if (img && img.complete && img.naturalWidth > 0) {
+            ctx.drawImage(img, px, py, 122, 145);
+        }
+
+        // Student Details
+        ctx.fillStyle = themeDark;
+        ctx.font = "bold 16px 'Times New Roman', serif";
+        ctx.textAlign = "center";
+        ctx.fillText(student.name.toUpperCase(), x + w/2, y + 252);
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "bold 14px system-ui, sans-serif";
+        ctx.fillText(student.studentId, x + w/2, y + 274);
+
+        ctx.fillStyle = "#334155";
+        ctx.font = "600 12px system-ui, sans-serif";
+        ctx.fillText(student.school || student.department || "School of Computational Intelligence", x + w/2, y + 296);
+
+        // Signature
+        ctx.strokeStyle = "#10b981";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x + w/2 - 35, y + 430);
+        ctx.bezierCurveTo(x + w/2 - 15, y + 410, x + w/2, y + 435, x + w/2 + 35, y + 420);
+        ctx.stroke();
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "bold 12px system-ui, sans-serif";
+        ctx.fillText("Registrar", x + w/2, y + 448);
+
+        ctx.fillStyle = "#334155";
+        ctx.font = "bold 9.5px system-ui, sans-serif";
+        ctx.fillText("ISSUING AUTHORITY", x + w/2, y + 462);
+
+        ctx.restore();
+        ctx.strokeStyle = themeColor;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, w, h);
+    }
+
+    function isAhalyaColor(col) {
+        return col === "#003b80";
+    }
+
+    function drawBackCardCanvas(ctx, x, y, w, h, student, themeColor, isAhalya) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, 16);
+        ctx.clip();
+
+        // White background
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(x, y, w, h);
+
+        // Top ribbon
+        ctx.fillStyle = themeColor;
+        ctx.beginPath();
+        ctx.moveTo(x + w - 40, y);
+        ctx.lineTo(x + w - 160, y);
+        ctx.lineTo(x + w - 180, y + 16);
+        ctx.lineTo(x + w - 20, y + 16);
+        ctx.fill();
+
+        // Banner bar
+        ctx.fillStyle = themeColor;
+        ctx.fillRect(x, y + 20, w, 28);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 12px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        const bannerTxt = isAhalya ? "Category : DAYSCHOLAR" : ("Hostel Name : " + (student.hostel || "DEVASAHAYAM"));
+        ctx.fillText(bannerTxt, x + w/2, y + 38);
+
+        // Details Block
+        ctx.textAlign = "left";
+        const tx = x + 20;
+        let ty = y + 74;
+
+        const details = [
+            ["Batch", ": " + (student.batch || "2025-26")],
+            ["Blood Group", ": " + (student.bloodGroup || "O+")],
+            ["Date of Birth", ": " + student.dob],
+            ["Address", ": " + (student.address || "7 90, EDULAPALLI, MUDIGUBBA, ANANTAPUR 515511")]
+        ];
+
+        details.forEach(([lbl, val]) => {
+            ctx.fillStyle = "#1e293b";
+            ctx.font = "600 11.5px system-ui, sans-serif";
+            ctx.fillText(lbl, tx, ty);
+            ctx.fillStyle = "#0f172a";
+            ctx.font = "bold 11.5px system-ui, sans-serif";
+            
+            if (lbl === "Address") {
+                const words = val.split(' ');
+                let line = "";
+                let addY = ty;
+                for (let i = 0; i < words.length; i++) {
+                    const testLine = line + words[i] + " ";
+                    if (ctx.measureText(testLine).width > 200 && i > 0) {
+                        ctx.fillText(line, tx + 88, addY);
+                        line = words[i] + " ";
+                        addY += 15;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                ctx.fillText(line, tx + 88, addY);
+                ty = addY + 18;
+            } else {
+                ctx.fillText(val, tx + 88, ty);
+                ty += 18;
+            }
+        });
+
+        // INSTRUCTIONS
+        ctx.fillStyle = themeColor;
+        ctx.font = "bold 12.5px 'Times New Roman', serif";
+        ctx.fillText("INSTRUCTIONS", tx, ty + 10);
+
+        ctx.fillStyle = "#1e293b";
+        ctx.font = "9.5px system-ui, sans-serif";
+        const bullets = [
+            "• This Identity Card is non-transferable.",
+            "• If this ID card is lost/found kindly return to theissuing authority.",
+            "• This card must be worn visibly by studentduring his or her presence in Joy premises."
+        ];
+        let by = ty + 28;
+        bullets.forEach(b => {
+            ctx.fillText(b, tx, by);
+            by += 15;
+        });
+
+        // CONTACT
+        ctx.fillStyle = themeColor;
+        ctx.font = "bold 12.5px 'Times New Roman', serif";
+        ctx.fillText("CONTACT", tx, by + 12);
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "bold 11px system-ui, sans-serif";
+        ctx.fillText("📞 +91 4637 - 231812", tx, by + 30);
+        ctx.fillText("✉️ oor@joyuniversity.edu.in", tx, by + 46);
+
+        // Barcode area
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(x + 20, y + h - 55, w - 40, 40);
+        ctx.fillStyle = "#1e293b";
+        let barX = x + 35;
+        for (let b = 0; b < 36; b++) {
+            const bw = (b % 4 === 0) ? 3 : (b % 3 === 0 ? 2 : 1);
+            ctx.fillRect(barX, y + h - 50, bw, 24);
+            barX += bw + 4;
+        }
+
+        ctx.textAlign = "center";
+        ctx.font = "bold 9px monospace";
+        ctx.fillText(student.studentId, x + w / 2, y + h - 18);
+
+        ctx.restore();
+        ctx.strokeStyle = themeColor;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, w, h);
+    }
+
+    // Initialize on page load
+    window.addEventListener("DOMContentLoaded", initCard);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joy University - Admin ID Card Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="app-header">
+    <a href="admin.html" class="brand-section">
+        <div class="brand-logo" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff;">JU</div>
+        <div class="brand-text">
+            <h1>Joy University</h1>
+            <span>ID Card Administration Console</span>
+        </div>
+    </a>
+
+    <div class="header-actions">
+        <div class="user-badge" style="background: rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.5);">
+            <span class="status-dot" style="background: #f59e0b;"></span>
+            <span>Admin Active</span>
+        </div>
+        <a href="index.html" class="btn btn-secondary btn-icon">
+            🎓 Student ID Preview
+        </a>
+        <button class="btn btn-outline-white btn-icon" onclick="resetDefaults()">
+            🔄 Reset Sample Data
+        </button>
+        <button class="btn btn-danger btn-icon" onclick="Auth.logout()">
+            Sign Out
+        </button>
+    </div>
+</header>
+
+<main class="main-content">
+
+    <!-- KPI STATS OVERVIEW -->
+    <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-info">
+                <h4>Total Students</h4>
+                <p id="statTotalStudents">0</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="color: #10b981; background: #ecfdf5;">💳</div>
+            <div class="stat-info">
+                <h4>Active ID Cards</h4>
+                <p id="statActiveCards">0</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="color: #3b82f6; background: #eff6ff;">🤖</div>
+            <div class="stat-info">
+                <h4>AI & Data Science</h4>
+                <p id="statAiDs">0</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="color: #8b5cf6; background: #f5f3ff;">🔒</div>
+            <div class="stat-info">
+                <h4>Cyber Security</h4>
+                <p id="statCyber">0</p>
+            </div>
+        </div>
+        <div class="stat-card" style="cursor: pointer;" onclick="switchAdminTab('queries')" title="Click to view student helpdesk queries">
+            <div class="stat-icon" style="color: #d97706; background: #fffbeb;">💬</div>
+            <div class="stat-info">
+                <h4>Student Queries</h4>
+                <div style="display: flex; align-items: baseline; gap: 8px;">
+                    <p id="statTotalQueries">0</p>
+                    <span id="statPendingBadge" class="badge-pending-count" style="font-size: 11px;">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN WORKSPACE TABS -->
+    <div class="admin-tab-nav">
+        <button class="admin-tab-btn active" id="tabBtnStudents" onclick="switchAdminTab('students')">
+            📋 Student ID Records (<span id="tabCountStudents">0</span>)
+        </button>
+        <button class="admin-tab-btn" id="tabBtnQueries" onclick="switchAdminTab('queries')">
+            💬 Student Queries & Helpdesk
+            <span class="badge-pending-count" id="pendingQueriesBadge">0</span>
+        </button>
+    </div>
+
+    <!-- TAB 1: STUDENT DIRECTORY MANAGEMENT PANEL -->
+    <div class="card-panel" id="panelStudents">
+        <div class="table-filter-bar">
+            <!-- Search Input -->
+            <div class="search-input-group">
+                <span>🔍</span>
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search by student name, ID, department or address..."
+                    oninput="handleSearchFilter()"
+                >
+            </div>
+
+            <!-- Filters & Action Buttons -->
+            <div class="filter-selects">
+                <select id="departmentFilter" onchange="handleSearchFilter()">
+                    <option value="">All Departments</option>
+                    <option value="CSE (AI & DS)">CSE (AI & DS)</option>
+                    <option value="Cyber Security">Cyber Security</option>
+                </select>
+
+                <button class="btn btn-primary" onclick="openAddStudentModal()">
+                    ➕ Add Student
+                </button>
+
+                <button class="btn btn-gold" onclick="openBatchPrintModal()">
+                    🖨️ Batch Print Cards
+                </button>
+            </div>
+        </div>
+
+        <!-- Student Records Table -->
+        <div class="data-table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Student Profile</th>
+                        <th>Department</th>
+                        <th>Year</th>
+                        <th>Blood Group</th>
+                        <th>DOB</th>
+                        <th>Card Status</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                    <!-- Populated via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 2: STUDENT QUERIES & HELPDESK MANAGEMENT PANEL -->
+    <div class="card-panel" id="panelQueries" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <h3 style="color: var(--primary); font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                    💬 Student Queries & ID Issue Resolutions
+                </h3>
+                <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+                    Review requests from students regarding address changes, details correction, or ID issues. Directly edit records and send solutions.
+                </p>
+            </div>
+        </div>
+
+        <!-- Query Filter Bar -->
+        <div class="table-filter-bar">
+            <div class="search-input-group">
+                <span>🔍</span>
+                <input
+                    type="text"
+                    id="searchQueryInput"
+                    placeholder="Search query ID, student name, roll number, issue details..."
+                    oninput="handleQueryFilter()"
+                >
+            </div>
+
+            <div class="filter-selects">
+                <select id="queryStatusFilter" onchange="handleQueryFilter()">
+                    <option value="">All Statuses</option>
+                    <option value="Pending">🟡 Pending Only</option>
+                    <option value="Resolved">🟢 Resolved Only</option>
+                </select>
+
+                <select id="queryCategoryFilter" onchange="handleQueryFilter()">
+                    <option value="">All Categories</option>
+                    <option value="Address Correction">Address Correction</option>
+                    <option value="Residence Category & Color Theme">Residence Category & Color Theme</option>
+                    <option value="Blood Group Correction">Blood Group Correction</option>
+                    <option value="Name / Details Correction">Name / Details Correction</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Queries List Container -->
+        <div id="queriesListContainer" class="queries-container">
+            <!-- Populated via JavaScript -->
+        </div>
+    </div>
+
+</main>
+
+<!-- =======================================================
+     MODAL: ADD / EDIT STUDENT
+     ======================================================= -->
+<div class="modal-overlay" id="studentModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="modalTitle">Enroll New Student</h3>
+            <button class="modal-close" onclick="closeStudentModal()">&times;</button>
+        </div>
+
+        <form id="studentForm" onsubmit="handleSaveStudent(event)">
+            <div class="modal-body">
+                <input type="hidden" id="editOriginalId" value="">
+
+                <div class="form-group">
+                    <label for="formName">Full Name *</label>
+                    <input type="text" id="formName" class="form-control" placeholder="e.g. K. Mokshitha" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div class="form-group">
+                        <label for="formId">Student ID Number *</label>
+                        <input type="text" id="formId" class="form-control" placeholder="e.g. 2024BTDS099" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="formDob">Date of Birth *</label>
+                        <input type="text" id="formDob" class="form-control" placeholder="DD/MM/YYYY" required>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div class="form-group">
+                        <label for="formDept">Department *</label>
+                        <select id="formDept" class="form-control" required>
+                            <option value="CSE (AI & DS)">CSE (AI & DS)</option>
+                            <option value="Cyber Security">Cyber Security</option>
+                            <option value="Computer Science & Eng.">Computer Science & Eng.</option>
+                            <option value="Data Science & Big Data">Data Science & Big Data</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="formYear">Academic Year *</label>
+                        <select id="formYear" class="form-control" required>
+                            <option value="1st Year">1st Year</option>
+                            <option value="2nd Year">2nd Year</option>
+                            <option value="3rd Year" selected>3rd Year</option>
+                            <option value="4th Year">4th Year</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div class="form-group">
+                        <label for="formBlood">Blood Group *</label>
+                        <select id="formBlood" class="form-control" required>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="formPhone">Emergency Phone</label>
+                        <input type="text" id="formPhone" class="form-control" placeholder="+91 98765 00000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="formAddress">Permanent Residential Address *</label>
+                    <textarea id="formAddress" class="form-control" rows="2" placeholder="e.g. 7 90, EDULAPALLI, MUDIGUBBA, ANANTAPUR 515511" required></textarea>
+                    <small style="color: var(--text-muted); font-size: 11.5px;">This address is displayed on the back of the official Joy University student ID card.</small>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div class="form-group">
+                        <label for="formCategory">Residence Category *</label>
+                        <select id="formCategory" class="form-control">
+                            <option value="DAYSCHOLAR">Dayscholar (Navy Blue Badge)</option>
+                            <option value="HOSTEL">Hostel Resident (Red Badge)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="formHostel">Hostel Name / Status</label>
+                        <input type="text" id="formHostel" class="form-control" placeholder="e.g. DEVASAHAYAM or DAYSCHOLAR">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="formPhoto">Student Photo (Optional)</label>
+                    <input type="file" id="formPhoto" class="form-control" accept="image/*">
+                    <small style="color: var(--text-muted); font-size: 11.5px;">If left blank, a branded university avatar with student initials will be generated automatically.</small>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeStudentModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="btnSaveStudent">Save Student & Issue ID</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =======================================================
+     MODAL: RESOLVE STUDENT QUERY & UPDATE RECORDS
+     ======================================================= -->
+<div class="modal-overlay" id="resolveQueryModal">
+    <div class="modal-box" style="max-width: 680px;">
+        <div class="modal-header">
+            <h3 id="resolveModalTitle">Resolve Student Query & Update Records</h3>
+            <button class="modal-close" onclick="closeResolveQueryModal()">&times;</button>
+        </div>
+
+        <form id="resolveQueryForm" onsubmit="handleSaveResolution(event)">
+            <input type="hidden" id="resolveQueryId" value="">
+            <input type="hidden" id="resolveStudentId" value="">
+
+            <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+                <!-- Student Query Details Box -->
+                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <div>
+                            <span class="query-id-tag" id="resolveDisplayQueryId">QRY-1001</span>
+                            <span class="query-category-tag" id="resolveDisplayCategory" style="margin-left: 6px;">Address Correction</span>
+                        </div>
+                        <span style="font-size: 12px; color: var(--text-muted);" id="resolveDisplayDate">24/09/2026</span>
+                    </div>
+                    <div style="font-weight: 700; font-size: 14.5px; color: var(--text-main); margin-bottom: 4px;" id="resolveDisplaySubject">Subject</div>
+                    <div style="font-size: 13.5px; color: #475569; line-height: 1.45;" id="resolveDisplayMessage">Message text...</div>
+
+                    <div id="resolveProposedBox" class="proposed-change-box" style="margin-top: 10px; margin-bottom: 0;">
+                        <div style="flex: 1;">
+                            <strong>Requested Change:</strong> <span id="resolveProposedText"></span>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="applyProposedAddress()">
+                            📋 Copy to Address
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Direct Student Record Update Form -->
+                <div style="border-top: 2px solid #f1f5f9; padding-top: 14px; margin-top: 14px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 16px;">✏️</span>
+                            <h4 style="font-size: 14.5px; color: var(--primary); font-weight: 700;">Edit Student ID Details Directly</h4>
+                        </div>
+                        <span style="font-size: 11px; background: #e0e7ff; color: #3730a3; padding: 2px 8px; border-radius: 10px; font-weight: 700;">Instant ID Sync</span>
+                    </div>
+
+                    <!-- Permanent Address Field -->
+                    <div class="form-group">
+                        <label for="resolveStudentAddress" style="font-weight: 700; color: #1e293b;">
+                            📍 Permanent Residential Address *
+                        </label>
+                        <textarea id="resolveStudentAddress" class="form-control" rows="2" placeholder="Update permanent address" required></textarea>
+                        <small style="color: var(--text-muted); font-size: 11.5px;">Directly updates the address shown on the student's ID card back face.</small>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form-group">
+                            <label for="resolveStudentName">Full Name</label>
+                            <input type="text" id="resolveStudentName" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="resolveStudentDob">Date of Birth</label>
+                            <input type="text" id="resolveStudentDob" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form-group">
+                            <label for="resolveStudentBlood">Blood Group</label>
+                            <select id="resolveStudentBlood" class="form-control">
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="resolveStudentCategory">Residence Category</label>
+                            <select id="resolveStudentCategory" class="form-control">
+                                <option value="DAYSCHOLAR">Dayscholar (Navy Blue Badge)</option>
+                                <option value="HOSTEL">Hostel Resident (Red Badge)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Solution Note to Student -->
+                <div style="border-top: 2px solid #f1f5f9; padding-top: 14px; margin-top: 14px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <label for="resolveAdminSolution" style="font-weight: 700; color: #1e293b; font-size: 14px;">
+                            🛡️ Admin Solution & Resolution Message to Student *
+                        </label>
+                        <select onchange="applySolutionTemplate(this.value)" style="font-size: 12px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border);">
+                            <option value="">⚡ Quick Response Template</option>
+                            <option value="address">Address Updated & Verified</option>
+                            <option value="category">Category & Theme Changed</option>
+                            <option value="blood">Blood Group Corrected</option>
+                            <option value="general">Request Verified & Updated</option>
+                        </select>
+                    </div>
+                    <textarea id="resolveAdminSolution" class="form-control" rows="3" placeholder="Write the resolution message that the student will see in their portal..." required></textarea>
+                    <small style="color: var(--text-muted); font-size: 11.5px;">This solution note will be sent directly to the student's dashboard.</small>
+                </div>
+
+                <div class="form-group" style="margin-top: 14px;">
+                    <label for="resolveQueryStatus">Update Query Status</label>
+                    <select id="resolveQueryStatus" class="form-control" style="font-weight: 700;">
+                        <option value="Resolved" selected>🟢 Resolved (Mark solved & notify student)</option>
+                        <option value="In Review">🔵 In Review (Under investigation)</option>
+                        <option value="Pending">🟡 Pending</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeResolveQueryModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="btnSaveResolution">
+                    💾 Save Student & Send Solution
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =======================================================
+     MODAL: BATCH PRINT CARDS PREVIEW
+     ======================================================= -->
+<div class="modal-overlay" id="batchPrintModal">
+    <div class="modal-box" style="max-width: 900px;">
+        <div class="modal-header">
+            <h3>🖨️ Batch Student ID Cards Printing Sheet</h3>
+            <button class="modal-close" onclick="closeBatchPrintModal()">&times;</button>
+        </div>
+
+        <div class="modal-body" style="background: #f8fafc;">
+            <p style="margin-bottom: 16px; color: var(--text-muted); font-size: 13px;">
+                Review the generated printable ID cards below. Click <strong>Print Badge Sheet</strong> to print standard front badges on cardstock or PVC.
+            </p>
+            <div id="batchCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px;">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeBatchPrintModal()">Close</button>
+            <button type="button" class="btn btn-gold" onclick="window.print()">Print Badge Sheet</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+    // Ensure admin authorization (auto-init for prototype evaluation)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("testAdmin") || !Storage.getSession().userId || Storage.getSession().role !== 'admin') {
+        Storage.setSession("ADMIN_001", 'admin');
+    }
+    Auth.requireAdminAuth();
+
+    let uploadedBase64Photo = null;
+
+    // Listen to photo file input
+    document.getElementById("formPhoto").addEventListener("change", function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (evt) => { uploadedBase64Photo = evt.target.result; };
+            reader.readAsDataURL(file);
+        } else {
+            uploadedBase64Photo = null;
+        }
+    });
+
+    let currentAdminTab = 'students';
+
+    function switchAdminTab(tabName) {
+        currentAdminTab = tabName;
+        const btnStudents = document.getElementById("tabBtnStudents");
+        const btnQueries = document.getElementById("tabBtnQueries");
+        const panelStudents = document.getElementById("panelStudents");
+        const panelQueries = document.getElementById("panelQueries");
+
+        if (tabName === 'queries') {
+            btnStudents.classList.remove("active");
+            btnQueries.classList.add("active");
+            panelStudents.style.display = "none";
+            panelQueries.style.display = "block";
+            handleQueryFilter();
+        } else {
+            btnQueries.classList.remove("active");
+            btnStudents.classList.add("active");
+            panelQueries.style.display = "none";
+            panelStudents.style.display = "block";
+            handleSearchFilter();
+        }
+    }
+
+    function renderAdminDashboard() {
+        const students = Storage.getAllStudents();
+        const queries = Storage.getAllQueries();
+        const pendingQueries = queries.filter(q => q.status === "Pending");
+        
+        // Update Stats Overview
+        document.getElementById("statTotalStudents").textContent = students.length;
+        document.getElementById("statActiveCards").textContent = students.filter(s => s.status !== "Inactive").length;
+        document.getElementById("statAiDs").textContent = students.filter(s => s.department.includes("AI & DS")).length;
+        document.getElementById("statCyber").textContent = students.filter(s => s.department.includes("Cyber")).length;
+        
+        // Query Stats & Badges
+        document.getElementById("statTotalQueries").textContent = queries.length;
+        document.getElementById("statPendingBadge").textContent = `${pendingQueries.length} Pending`;
+        document.getElementById("pendingQueriesBadge").textContent = pendingQueries.length;
+        document.getElementById("tabCountStudents").textContent = students.length;
+
+        handleSearchFilter();
+        handleQueryFilter();
+    }
+
+    // -------------------------------------------------------------
+    // STUDENT DIRECTORY HANDLERS
+    // -------------------------------------------------------------
+    function handleSearchFilter() {
+        const query = document.getElementById("searchInput").value.toLowerCase().trim();
+        const deptFilter = document.getElementById("departmentFilter").value;
+        const students = Storage.getAllStudents();
+
+        const filtered = students.filter(s => {
+            const matchesQuery = !query || 
+                s.name.toLowerCase().includes(query) ||
+                s.studentId.toLowerCase().includes(query) ||
+                s.department.toLowerCase().includes(query) ||
+                (s.address && s.address.toLowerCase().includes(query));
+            
+            const matchesDept = !deptFilter || s.department === deptFilter;
+            return matchesQuery && matchesDept;
+        });
+
+        renderTable(filtered);
+    }
+
+    function renderTable(studentList) {
+        const tbody = document.getElementById("studentTableBody");
+        tbody.innerHTML = "";
+
+        if (studentList.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 32px; color: var(--text-muted);">
+                        No student records match your search criteria.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        studentList.forEach(st => {
+            const photo = Storage.getPhoto(st.studentId) || generateSvgAvatar(st.name);
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+                <td>
+                    <div class="table-student-cell">
+                        <img src="${photo}" class="table-avatar" alt="${st.name}">
+                        <div>
+                            <div class="table-student-name">${st.name}</div>
+                            <div class="table-student-id">${st.studentId}</div>
+                            <div style="font-size: 11px; color: #64748b; margin-top: 3px; max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${st.address || 'No address registered'}">
+                                📍 ${st.address || 'Address not registered'}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td><strong>${st.department}</strong></td>
+                <td>${st.year}</td>
+                <td><span style="font-weight: bold; color: #dc2626;">${st.bloodGroup}</span></td>
+                <td>${st.dob}</td>
+                <td>
+                    <span class="status-pill status-active">Active</span>
+                    ${(st.category === 'DAYSCHOLAR' || st.cardTheme === 'navy' || (st.name && st.name.toUpperCase().includes('AHALYA'))) 
+                        ? '<span class="status-pill" style="background:#eff6ff;color:#003b80;border:1px solid #bfdbfe;margin-left:4px;">Dayscholar</span>' 
+                        : '<span class="status-pill" style="background:#fef2f2;color:#991b1b;border:1px solid #fecaca;margin-left:4px;">Hostel</span>'}
+                </td>
+                <td style="text-align: right;">
+                    <div class="table-actions" style="justify-content: flex-end;">
+                        <button class="btn btn-secondary btn-icon" title="View Digital ID Card" onclick="viewStudentCard('${st.studentId}')">
+                            🪪 View ID
+                        </button>
+                        <button class="btn btn-secondary btn-icon" title="Edit Student & Address" onclick="openEditStudentModal('${st.studentId}')">
+                            ✏️ Edit
+                        </button>
+                        <button class="btn btn-danger btn-icon" title="Delete Student" onclick="confirmDeleteStudent('${st.studentId}', '${st.name}')">
+                            🗑️
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function viewStudentCard(studentId) {
+        Storage.setSession(studentId, 'student');
+        window.location.href = "index.html";
+    }
+
+    function openAddStudentModal() {
+        document.getElementById("modalTitle").textContent = "Enroll New Student & Issue ID";
+        document.getElementById("editOriginalId").value = "";
+        document.getElementById("studentForm").reset();
+        document.getElementById("formAddress").value = "";
+        document.getElementById("formCategory").value = "DAYSCHOLAR";
+        document.getElementById("formHostel").value = "DAYSCHOLAR";
+        uploadedBase64Photo = null;
+        document.getElementById("formId").disabled = false;
+        document.getElementById("studentModal").classList.add("active");
+    }
+
+    function openEditStudentModal(studentId) {
+        const student = Storage.getStudentById(studentId);
+        if (!student) return;
+
+        document.getElementById("modalTitle").textContent = "Edit Student: " + student.name;
+        document.getElementById("editOriginalId").value = student.studentId;
+        document.getElementById("formName").value = student.name;
+        document.getElementById("formId").value = student.studentId;
+        document.getElementById("formId").disabled = true; // Lock ID on edit
+        document.getElementById("formDob").value = student.dob;
+        document.getElementById("formDept").value = student.department;
+        document.getElementById("formYear").value = student.year;
+        document.getElementById("formBlood").value = student.bloodGroup;
+        document.getElementById("formPhone").value = student.phone || "";
+        
+        // Populate Address and Category fields
+        document.getElementById("formAddress").value = student.address || "";
+        document.getElementById("formCategory").value = student.category || (student.cardTheme === 'navy' ? 'DAYSCHOLAR' : 'HOSTEL');
+        document.getElementById("formHostel").value = student.hostel || (student.category === 'DAYSCHOLAR' ? 'DAYSCHOLAR' : 'DEVASAHAYAM');
+        
+        uploadedBase64Photo = null;
+        document.getElementById("studentModal").classList.add("active");
+    }
+
+    function closeStudentModal() {
+        document.getElementById("studentModal").classList.remove("active");
+    }
+
+    function handleSaveStudent(e) {
+        e.preventDefault();
+        const originalId = document.getElementById("editOriginalId").value;
+        const studentId = document.getElementById("formId").value.trim().toUpperCase();
+        const name = document.getElementById("formName").value.trim();
+        const dob = document.getElementById("formDob").value.trim();
+        const department = document.getElementById("formDept").value;
+        const year = document.getElementById("formYear").value;
+        const bloodGroup = document.getElementById("formBlood").value;
+        const phone = document.getElementById("formPhone").value.trim();
+        const address = document.getElementById("formAddress").value.trim();
+        const category = document.getElementById("formCategory").value;
+        const hostel = document.getElementById("formHostel").value.trim() || (category === 'DAYSCHOLAR' ? 'DAYSCHOLAR' : 'DEVASAHAYAM');
+        const cardTheme = category === 'DAYSCHOLAR' ? 'navy' : 'red';
+
+        if (originalId) {
+            // Edit existing student
+            Storage.updateStudent(originalId, {
+                name, dob, department, year, bloodGroup, phone, address, category, hostel, cardTheme
+            });
+            if (uploadedBase64Photo) {
+                Storage.savePhoto(originalId, uploadedBase64Photo);
+            }
+        } else {
+            // Add new student
+            try {
+                Storage.addStudent({
+                    studentId,
+                    name,
+                    dob,
+                    department,
+                    school: department.includes("Cyber") ? "School of Computational Intelligence" : "School of Computational Intelligence",
+                    year,
+                    batch: "2024-28",
+                    bloodGroup,
+                    hostel,
+                    category,
+                    cardTheme,
+                    phone: phone || "+91 4637 - 231812",
+                    email: `${studentId.toLowerCase()}@joyuniversity.edu.in`,
+                    address: address || "Joy University Campus, Vadakkankulam, TN",
+                    validThru: "06/2027",
+                    issueDate: "08/2024",
+                    status: "Active"
+                });
+                if (uploadedBase64Photo) {
+                    Storage.savePhoto(studentId, uploadedBase64Photo);
+                }
+            } catch (err) {
+                alert(err.message);
+                return;
+            }
+        }
+
+        closeStudentModal();
+        renderAdminDashboard();
+    }
+
+    function confirmDeleteStudent(studentId, name) {
+        if (confirm(`Are you sure you want to remove ${name} (${studentId}) from Joy University ID records?`)) {
+            Storage.deleteStudent(studentId);
+            renderAdminDashboard();
+        }
+    }
+
+    // -------------------------------------------------------------
+    // STUDENT QUERIES & HELPDESK HANDLERS
+    // -------------------------------------------------------------
+    function handleQueryFilter() {
+        const searchText = (document.getElementById("searchQueryInput") ? document.getElementById("searchQueryInput").value : "").toLowerCase().trim();
+        const statusFilter = document.getElementById("queryStatusFilter") ? document.getElementById("queryStatusFilter").value : "";
+        const categoryFilter = document.getElementById("queryCategoryFilter") ? document.getElementById("queryCategoryFilter").value : "";
+        const allQueries = Storage.getAllQueries();
+
+        const filtered = allQueries.filter(q => {
+            const matchesSearch = !searchText ||
+                q.queryId.toLowerCase().includes(searchText) ||
+                q.studentName.toLowerCase().includes(searchText) ||
+                q.studentId.toLowerCase().includes(searchText) ||
+                q.subject.toLowerCase().includes(searchText) ||
+                q.message.toLowerCase().includes(searchText);
+
+            const matchesStatus = !statusFilter || q.status === statusFilter;
+            const matchesCat = !categoryFilter || q.category === categoryFilter;
+
+            return matchesSearch && matchesStatus && matchesCat;
+        });
+
+        renderQueries(filtered);
+    }
+
+    function renderQueries(queriesList) {
+        const container = document.getElementById("queriesListContainer");
+        if (!container) return;
+        container.innerHTML = "";
+
+        if (queriesList.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px; background: #f8fafc; border-radius: 12px; border: 1.5px dashed var(--border);">
+                    <div style="font-size: 36px; margin-bottom: 8px;">🎉</div>
+                    <h4 style="font-size: 16px; color: var(--text-main); margin-bottom: 4px;">No Queries Found</h4>
+                    <p style="font-size: 13.5px; color: var(--text-muted);">
+                        No student queries match the selected filters or there are no pending issues at this time.
+                    </p>
+                </div>
+            `;
+            return;
+        }
+
+        queriesList.forEach(q => {
+            const student = Storage.getStudentById(q.studentId);
+            const photo = Storage.getPhoto(q.studentId) || generateSvgAvatar(q.studentName);
+            const isPending = q.status === "Pending";
+            const isResolved = q.status === "Resolved";
+
+            const card = document.createElement("div");
+            card.className = `query-card ${isPending ? 'pending' : 'resolved'}`;
+
+            // Format proposed data if present
+            let proposedHtml = "";
+            if (q.proposedData && Object.keys(q.proposedData).length > 0) {
+                if (q.proposedData.address) {
+                    proposedHtml = `
+                        <div class="proposed-change-box">
+                            <span>📍</span>
+                            <div><strong>Requested New Address:</strong> ${q.proposedData.address}</div>
+                        </div>
+                    `;
+                } else if (q.proposedData.bloodGroup) {
+                    proposedHtml = `
+                        <div class="proposed-change-box">
+                            <span>🩸</span>
+                            <div><strong>Requested Blood Group:</strong> ${q.proposedData.bloodGroup}</div>
+                        </div>
+                    `;
+                } else if (q.proposedData.category) {
+                    proposedHtml = `
+                        <div class="proposed-change-box">
+                            <span>⭐</span>
+                            <div><strong>Requested Category:</strong> ${q.proposedData.category} (${q.proposedData.cardTheme || 'navy'} badge)</div>
+                        </div>
+                    `;
+                }
+            }
+
+            // Solution block if resolved
+            let solutionHtml = "";
+            if (isResolved && q.adminSolution) {
+                solutionHtml = `
+                    <div class="admin-solution-display">
+                        <div style="font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                            🛡️ Official Admin Resolution Note:
+                        </div>
+                        <div>${q.adminSolution}</div>
+                        <div style="font-size: 11px; color: #047857; margin-top: 6px; font-weight: 600;">
+                            ✓ Resolved on: ${q.resolvedAt || 'Verified & Updated'}
+                        </div>
+                    </div>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="query-card-header">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span class="query-id-tag">${q.queryId}</span>
+                        <span class="query-category-tag">${q.category}</span>
+                        <span style="font-size: 12px; color: var(--text-muted);">🕒 ${q.createdAt}</span>
+                    </div>
+                    <div>
+                        ${isPending 
+                            ? '<span class="status-pill" style="background:#fef3c7; color:#b45309; border:1px solid #fde68a;">🟡 Pending Admin Review</span>' 
+                            : '<span class="status-pill" style="background:#ecfdf5; color:#047857; border:1px solid #a7f3d0;">🟢 Resolved & Updated</span>'}
+                    </div>
+                </div>
+
+                <div class="query-student-meta">
+                    <img src="${photo}" class="query-student-avatar" alt="${q.studentName}">
+                    <div>
+                        <div style="font-weight: 700; font-size: 14.5px; color: var(--primary);">${q.studentName}</div>
+                        <div style="font-size: 12px; color: var(--text-muted); font-family: monospace;">
+                            ID: <strong>${q.studentId}</strong> • Dept: ${q.department || (student ? student.department : '')}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="query-subject">${q.subject}</div>
+                <div class="query-message-text">"${q.message}"</div>
+                ${proposedHtml}
+                ${solutionHtml}
+
+                <div class="query-actions-bar">
+                    <button class="btn btn-primary btn-sm" onclick="openSolveQueryModal('${q.queryId}')">
+                        ✏️ ${isResolved ? 'Review / Edit Resolution' : 'Solve Query & Edit Student'}
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="viewStudentCard('${q.studentId}')">
+                        🪪 View ID Card
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteQuery('${q.queryId}')" title="Delete query record">
+                        🗑️
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // -------------------------------------------------------------
+    // SOLVE STUDENT QUERY MODAL & WORKFLOW
+    // -------------------------------------------------------------
+    let currentProposedAddress = "";
+
+    function openSolveQueryModal(queryId) {
+        const query = Storage.getQueryById(queryId);
+        if (!query) return;
+
+        const student = Storage.getStudentById(query.studentId);
+        if (!student) {
+            alert(`Student ID ${query.studentId} not found in student records.`);
+            return;
+        }
+
+        document.getElementById("resolveQueryId").value = query.queryId;
+        document.getElementById("resolveStudentId").value = student.studentId;
+        document.getElementById("resolveModalTitle").textContent = `Solve Query ${query.queryId} - ${student.name} (${student.studentId})`;
+
+        // Display query information
+        document.getElementById("resolveDisplayQueryId").textContent = query.queryId;
+        document.getElementById("resolveDisplayCategory").textContent = query.category;
+        document.getElementById("resolveDisplayDate").textContent = `Submitted: ${query.createdAt}`;
+        document.getElementById("resolveDisplaySubject").textContent = query.subject;
+        document.getElementById("resolveDisplayMessage").textContent = `"${query.message}"`;
+
+        // Check if there is a proposed change
+        const proposedBox = document.getElementById("resolveProposedBox");
+        if (query.proposedData && query.proposedData.address) {
+            currentProposedAddress = query.proposedData.address;
+            document.getElementById("resolveProposedText").textContent = currentProposedAddress;
+            proposedBox.style.display = "flex";
+        } else {
+            currentProposedAddress = "";
+            proposedBox.style.display = "none";
+        }
+
+        // Preload Student Editable Details (including Address!)
+        document.getElementById("resolveStudentAddress").value = student.address || "";
+        document.getElementById("resolveStudentName").value = student.name;
+        document.getElementById("resolveStudentDob").value = student.dob;
+        document.getElementById("resolveStudentBlood").value = student.bloodGroup || "O+";
+        document.getElementById("resolveStudentCategory").value = student.category || (student.cardTheme === 'navy' ? 'DAYSCHOLAR' : 'HOSTEL');
+
+        // Preload Admin Solution
+        if (query.adminSolution) {
+            document.getElementById("resolveAdminSolution").value = query.adminSolution;
+        } else {
+            // Smart auto-prefill based on query category
+            if (query.category.toLowerCase().includes("address")) {
+                document.getElementById("resolveAdminSolution").value = "Your residential address has been verified and updated in official university records and on your ID card. Please review your updated digital ID badge.";
+            } else if (query.category.toLowerCase().includes("category") || query.category.toLowerCase().includes("dayscholar")) {
+                document.getElementById("resolveAdminSolution").value = "Your category has been updated to DAYSCHOLAR and your ID badge has been customized with the official Navy Blue theme.";
+            } else if (query.category.toLowerCase().includes("blood")) {
+                document.getElementById("resolveAdminSolution").value = "Your blood group has been corrected in our student records and on your ID card per your verified report.";
+            } else {
+                document.getElementById("resolveAdminSolution").value = "Your request has been verified and processed by the Joy University ID administration. Your details are now updated.";
+            }
+        }
+
+        document.getElementById("resolveQueryStatus").value = query.status === "Pending" ? "Resolved" : query.status;
+        document.getElementById("resolveQueryModal").classList.add("active");
+    }
+
+    function closeResolveQueryModal() {
+        document.getElementById("resolveQueryModal").classList.remove("active");
+    }
+
+    function applyProposedAddress() {
+        if (currentProposedAddress) {
+            document.getElementById("resolveStudentAddress").value = currentProposedAddress;
+            // Also suggest solution note
+            document.getElementById("resolveAdminSolution").value = `Your residential address has been successfully updated to "${currentProposedAddress}" and is now printed on your official ID card.`;
+        }
+    }
+
+    function applySolutionTemplate(type) {
+        const solArea = document.getElementById("resolveAdminSolution");
+        if (type === "address") {
+            const addr = document.getElementById("resolveStudentAddress").value.trim();
+            solArea.value = `Your residential address has been verified and updated in our records and on your ID card (${addr || 'updated'}). Please review your digital ID badge.`;
+        } else if (type === "category") {
+            solArea.value = "Your student status has been updated to DAYSCHOLAR and your ID badge has been customized with the official Navy Blue theme.";
+            document.getElementById("resolveStudentCategory").value = "DAYSCHOLAR";
+        } else if (type === "blood") {
+            const bg = document.getElementById("resolveStudentBlood").value;
+            solArea.value = `Your blood group has been corrected to ${bg} in university records and updated on your ID card.`;
+        } else if (type === "general") {
+            solArea.value = "Your query has been reviewed and resolved by Joy University ID Card Administration. All requested details are now updated.";
+        }
+    }
+
+    function handleSaveResolution(e) {
+        e.preventDefault();
+        const queryId = document.getElementById("resolveQueryId").value;
+        const studentId = document.getElementById("resolveStudentId").value;
+        const newAddress = document.getElementById("resolveStudentAddress").value.trim();
+        const newName = document.getElementById("resolveStudentName").value.trim();
+        const newDob = document.getElementById("resolveStudentDob").value.trim();
+        const newBlood = document.getElementById("resolveStudentBlood").value;
+        const newCategory = document.getElementById("resolveStudentCategory").value;
+        const adminSolution = document.getElementById("resolveAdminSolution").value.trim();
+        const status = document.getElementById("resolveQueryStatus").value;
+
+        // 1. Update Student Record in Storage (updating Address, Category, etc.)
+        const cardTheme = newCategory === "DAYSCHOLAR" ? "navy" : "red";
+        const hostel = newCategory === "DAYSCHOLAR" ? "DAYSCHOLAR" : "DEVASAHAYAM";
+        
+        Storage.updateStudent(studentId, {
+            address: newAddress,
+            name: newName,
+            dob: newDob,
+            bloodGroup: newBlood,
+            category: newCategory,
+            hostel: hostel,
+            cardTheme: cardTheme
+        });
+
+        // 2. Update Query Status and Solution
+        const now = new Date();
+        const resolvedAt = String(now.getDate()).padStart(2, '0') + '/' + 
+                           String(now.getMonth() + 1).padStart(2, '0') + '/' + 
+                           now.getFullYear() + ' ' + 
+                           String(now.getHours()).padStart(2, '0') + ':' + 
+                           String(now.getMinutes()).padStart(2, '0');
+
+        Storage.updateQuery(queryId, {
+            status: status,
+            adminSolution: adminSolution,
+            resolvedAt: status === "Resolved" ? resolvedAt : null
+        });
+
+        closeResolveQueryModal();
+        renderAdminDashboard();
+
+        alert(`✅ Query ${queryId} has been resolved!\n\n• Student records for ${newName} (${studentId}) updated.\n• Address updated to: ${newAddress}\n• Solution sent to student portal.`);
+    }
+
+    function deleteQuery(queryId) {
+        if (confirm(`Are you sure you want to delete query ${queryId}?`)) {
+            Storage.deleteQuery(queryId);
+            renderAdminDashboard();
+        }
+    }
+
+    function resetDefaults() {
+        if (confirm("Reset student directory and helpdesk queries to Joy University sample dataset?")) {
+            Storage.resetToDefaults();
+            renderAdminDashboard();
+        }
+    }
+
+    // -------------------------------------------------------------
+    // BATCH PRINT CARDS PREVIEW
+    // -------------------------------------------------------------
+    function openBatchPrintModal() {
+        const students = Storage.getAllStudents();
+        const grid = document.getElementById("batchCardsGrid");
+        grid.innerHTML = "";
+
+        students.forEach(st => {
+            const photo = Storage.getPhoto(st.studentId) || generateSvgAvatar(st.name);
+            const cardEl = document.createElement("div");
+            cardEl.style.cssText = "background: #fff; border: 2px solid #b91c1c; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(185, 28, 28, 0.12); font-size: 12px;";
+
+            cardEl.innerHTML = `
+                <div style="background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 100%); color: #fff; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f59e0b;">
+                    <div>
+                        <strong style="font-size: 13px; text-transform: uppercase;">Joy University</strong>
+                        <div style="font-size: 9px; color: #fecaca;">STUDENT ID CARD</div>
+                    </div>
+                    <span style="font-size: 14px;">★</span>
+                </div>
+                <div style="display: flex; gap: 12px; padding: 12px; align-items: center;">
+                    <img src="${photo}" style="width: 70px; height: 85px; border-radius: 6px; border: 1.5px solid #b91c1c; object-fit: cover;">
+                    <div style="flex: 1; line-height: 1.4;">
+                        <div style="font-weight: 800; font-size: 14px; color: #7f1d1d;">${st.name}</div>
+                        <div style="color: #b91c1c; font-family: monospace; font-weight: bold; font-size: 12px;">ID: ${st.studentId}</div>
+                        <div>Dept: ${st.department}</div>
+                        <div>Year: ${st.year} | Blood: <strong style="color: #dc2626;">${st.bloodGroup}</strong></div>
+                        <div style="font-size: 10px; color: #64748b;">DOB: ${st.dob}</div>
+                        <div style="font-size: 9.5px; color: #64748b; margin-top: 2px;">📍 ${st.address || ''}</div>
+                    </div>
+                </div>
+                <div style="background: #fff5f5; border-top: 1px solid #fee2e2; padding: 6px 12px; display: flex; justify-content: space-between; font-size: 9.5px; color: #64748b;">
+                    <span>Valid Thru: 06/2027</span>
+                    <span style="color: #b91c1c; font-weight: bold;">● Active</span>
+                </div>
+            `;
+            grid.appendChild(cardEl);
+        });
+
+        document.getElementById("batchPrintModal").classList.add("active");
+    }
+
+    function closeBatchPrintModal() {
+        document.getElementById("batchPrintModal").classList.remove("active");
+    }
+
+    // Initialize on page load
+    window.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has("testAdmin") || !Storage.getSession().userId) {
+            Storage.setSession("ADMIN_001", 'admin');
+        }
+
+        renderAdminDashboard();
+
+        if (urlParams.get("tab") === "queries") {
+            switchAdminTab("queries");
+        }
+        if (urlParams.get("openEdit")) {
+            openEditStudentModal(urlParams.get("openEdit"));
+        }
+        if (urlParams.get("openSolve")) {
+            switchAdminTab("queries");
+            openSolveQueryModal(urlParams.get("openSolve"));
+        }
+    });
+</script>
+
+</body>
+</html>
