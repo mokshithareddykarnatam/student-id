@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joy University - Student ID Card Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page-body">
+
+<div class="login-card">
+    <div class="login-card-header">
+        <div style="display:flex; justify-content:center; margin-bottom: 12px;">
+            <div class="brand-logo" style="width: 50px; height: 50px; font-size: 24px;">JU</div>
+        </div>
+        <h2>Joy University</h2>
+        <p>Smart ID Card Management System</p>
+    </div>
+
+    <!-- Role Switcher Tabs -->
+    <div class="tab-selector">
+        <button type="button" class="tab-btn active" id="tabStudent" onclick="switchTab('student')">
+            🎓 Student Portal
+        </button>
+        <button type="button" class="tab-btn" id="tabAdmin" onclick="switchTab('admin')">
+            🛡️ Admin Portal
+        </button>
+    </div>
+
+    <!-- STUDENT LOGIN FORM -->
+    <div id="studentLoginSection" class="login-form-body">
+        <div id="studentAlert" class="alert-message alert-error"></div>
+
+        <form id="studentLoginForm" onsubmit="handleStudentLogin(event)">
+            <div class="form-group">
+                <label for="studentId">Student Roll / ID Number</label>
+                <input
+                    type="text"
+                    id="studentId"
+                    class="form-control"
+                    placeholder="e.g. 2024BTDS014"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="dob">Date of Birth (DD/MM/YYYY)</label>
+                <input
+                    type="text"
+                    id="dob"
+                    class="form-control"
+                    placeholder="DD/MM/YYYY"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 6px;">
+                Sign In to Student Portal →
+            </button>
+        </form>
+
+        <!-- 1-CLICK DEMO LOGIN QUICK CHIPS -->
+        <div class="demo-credentials-box">
+            <h4>⚡ Quick 1-Click Demo Students:</h4>
+            <div class="demo-chips" id="demoChipsContainer">
+                <!-- Dynamically populated or rendered -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN LOGIN FORM -->
+    <div id="adminLoginSection" class="login-form-body" style="display: none;">
+        <div id="adminAlert" class="alert-message alert-error"></div>
+
+        <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+            <div class="form-group">
+                <label for="adminUser">Administrator Username</label>
+                <input
+                    type="text"
+                    id="adminUser"
+                    class="form-control"
+                    placeholder="admin"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="adminPass">Password</label>
+                <input
+                    type="password"
+                    id="adminPass"
+                    class="form-control"
+                    placeholder="••••••••"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn btn-gold" style="width: 100%; padding: 12px; margin-top: 6px;">
+                Enter Admin Management Portal →
+            </button>
+        </form>
+
+        <div class="demo-credentials-box">
+            <h4>⚡ Quick Admin Demo:</h4>
+            <div style="font-size: 12.5px; color: #475569; margin-bottom: 8px;">
+                Username: <code>admin</code> | Password: <code>admin123</code>
+            </div>
+            <button type="button" class="btn btn-secondary btn-icon" style="width: 100%;" onclick="quickFillAdmin()">
+                Auto-fill Admin Credentials
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+    // Tab switching
+    function switchTab(role) {
+        const tabStudent = document.getElementById("tabStudent");
+        const tabAdmin = document.getElementById("tabAdmin");
+        const studentSec = document.getElementById("studentLoginSection");
+        const adminSec = document.getElementById("adminLoginSection");
+
+        if (role === 'admin') {
+            tabAdmin.classList.add("active");
+            tabStudent.classList.remove("active");
+            adminSec.style.display = "block";
+            studentSec.style.display = "none";
+        } else {
+            tabStudent.classList.add("active");
+            tabAdmin.classList.remove("active");
+            studentSec.style.display = "block";
+            adminSec.style.display = "none";
+        }
+    }
+
+    // Render 1-click Demo Chips
+    function renderDemoChips() {
+        const container = document.getElementById("demoChipsContainer");
+        const students = Storage.getAllStudents();
+        container.innerHTML = "";
+
+        students.forEach(st => {
+            const chip = document.createElement("button");
+            chip.type = "button";
+            chip.className = "demo-chip";
+            chip.textContent = st.name.split(' ')[0] + " (" + st.studentId + ")";
+            chip.title = `Click to auto-fill & login as ${st.name}`;
+            chip.onclick = () => {
+                document.getElementById("studentId").value = st.studentId;
+                document.getElementById("dob").value = st.dob;
+                // Auto login directly on chip click for fast testing
+                Auth.loginStudent(st.studentId, st.dob);
+                window.location.href = "dashboard.html";
+            };
+            container.appendChild(chip);
+        });
+    }
+
+    function quickFillAdmin() {
+        document.getElementById("adminUser").value = "admin";
+        document.getElementById("adminPass").value = "admin123";
+    }
+
+    function handleStudentLogin(e) {
+        e.preventDefault();
+        const alertBox = document.getElementById("studentAlert");
+        alertBox.style.display = "none";
+
+        const id = document.getElementById("studentId").value.trim();
+        const dob = document.getElementById("dob").value.trim();
+
+        const result = Auth.loginStudent(id, dob);
+        if (result.success) {
+            window.location.href = "dashboard.html";
+        } else {
+            alertBox.textContent = result.message;
+            alertBox.style.display = "block";
+        }
+    }
+
+    function handleAdminLogin(e) {
+        e.preventDefault();
+        const alertBox = document.getElementById("adminAlert");
+        alertBox.style.display = "none";
+
+        const user = document.getElementById("adminUser").value.trim();
+        const pass = document.getElementById("adminPass").value.trim();
+
+        const result = Auth.loginAdmin(user, pass);
+        if (result.success) {
+            window.location.href = "admin.html";
+        } else {
+            alertBox.textContent = result.message;
+            alertBox.style.display = "block";
+        }
+    }
+
+    // Check URL params for role=admin
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("role") === "admin") {
+        switchTab("admin");
+    }
+
+    renderDemoChips();
+</script>
+
+</body>
+</html>

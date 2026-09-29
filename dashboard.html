@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joy University - Student Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="app-header">
+    <a href="dashboard.html" class="brand-section">
+        <div class="brand-logo">JU</div>
+        <div class="brand-text">
+            <h1>Joy University</h1>
+            <span>Student Portal</span>
+        </div>
+    </a>
+
+    <div class="header-actions">
+        <div class="user-badge">
+            <span class="status-dot"></span>
+            <span id="headerStudentName">Student</span>
+        </div>
+        <a href="index.html" class="btn btn-gold btn-icon">
+            🪪 View ID Card
+        </a>
+        <a href="admin.html" class="btn btn-outline-white btn-icon" title="Switch to Administrative View">
+            🛡️ Admin Mode
+        </a>
+        <button class="btn btn-danger btn-icon" onclick="Auth.logout()">
+            Sign Out
+        </button>
+    </div>
+</header>
+
+<main class="main-content">
+
+    <!-- WELCOME BANNER -->
+    <div class="banner-panel">
+        <div>
+            <h2>Welcome back, <span id="welcomeName">Student</span> 👋</h2>
+            <p>Academic Year 2024–2025 • Official Digital Campus Identity</p>
+        </div>
+        <a href="index.html" class="btn btn-primary">
+            Open Interactive ID Card →
+        </a>
+    </div>
+
+    <!-- STUDENT PROFILE & CREDENTIALS OVERVIEW -->
+    <div class="card-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+            <h3 style="color: var(--primary); font-size: 18px; font-weight: 700;">Student Credentials & Status</h3>
+            <span class="status-pill status-active" id="badgeStatus">Active • Enrolled</span>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 26px; align-items: flex-start;">
+            <!-- Profile Photo Box -->
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                <div class="student-photo-frame" style="width: 130px; height: 155px; border-width: 2.5px; border-radius: 12px; overflow: hidden; position: relative; background: #f1f5f9; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    <img id="profilePhoto" src="" alt="Student Profile Photo" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </div>
+                <label for="quickPhotoUpload" class="btn btn-secondary btn-icon" style="font-size: 12px; cursor: pointer;">
+                    📷 Change Photo
+                    <input type="file" id="quickPhotoUpload" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
+                </label>
+            </div>
+
+            <!-- Details Grid -->
+            <div style="flex: 1; min-width: 280px;">
+                <div class="info-grid" style="grid-template-columns: 140px 1fr; row-gap: 12px; font-size: 14px;">
+                    <div class="lbl">Full Name:</div>
+                    <div class="val" id="profileFullName">-</div>
+
+                    <div class="lbl">Student ID / Roll:</div>
+                    <div class="val" style="font-family: monospace; font-size: 15px; color: var(--primary);" id="profileStudentId">-</div>
+
+                    <div class="lbl">Department:</div>
+                    <div class="val" id="profileDepartment">-</div>
+
+                    <div class="lbl">Current Year:</div>
+                    <div class="val" id="profileYear">-</div>
+
+                    <div class="lbl">Date of Birth:</div>
+                    <div class="val" id="profileDOB">-</div>
+
+                    <div class="lbl">Blood Group:</div>
+                    <div class="val" style="color: #dc2626;" id="profileBloodGroup">-</div>
+
+                    <div class="lbl">Campus Email:</div>
+                    <div class="val" id="profileEmail">-</div>
+
+                    <div class="lbl">Emergency Contact:</div>
+                    <div class="val" id="profilePhone">-</div>
+
+                    <div class="lbl">Permanent Address:</div>
+                    <div class="val" id="profileAddress" style="font-size: 13.5px; line-height: 1.4; color: #1e293b;">-</div>
+
+                    <div class="lbl">Residence Category:</div>
+                    <div class="val" id="profileCategory">-</div>
+
+                    <div class="lbl">Card Validity:</div>
+                    <div class="val" id="profileValidity">Valid Thru: 06/2027</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STUDENT QUERIES & HELPDESK MODULE -->
+    <div class="card-panel" id="helpdeskSection" style="margin-top: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 12px; flex-wrap: wrap; gap: 12px;">
+            <div>
+                <h3 style="color: var(--primary); font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                    💬 Student Helpdesk & ID Correction Requests
+                </h3>
+                <p style="font-size: 13px; color: var(--text-muted); margin-top: 3px;">
+                    Have an issue with your address, name, blood group, or need card replacement? Submit a query to the ID card administrator and track real-time solutions.
+                </p>
+            </div>
+            <button class="btn btn-primary" onclick="openRaiseQueryModal()">
+                ➕ Raise New Query / Issue
+            </button>
+        </div>
+
+        <!-- Student Submitted Queries History -->
+        <div id="studentQueriesHistory" class="queries-container">
+            <!-- Dynamically populated via JavaScript -->
+        </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 24px;">
+        <div class="card-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h4 style="color: var(--primary); font-size: 16px; margin-bottom: 6px;">🪪 3D Digital ID Card</h4>
+                <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.4;">
+                    View your full-size double-sided ID badge with interactive 3D flip, RFID chip visual, security hologram, and scannable QR verification code.
+                </p>
+            </div>
+            <a href="index.html" class="btn btn-primary" style="margin-top: 16px;">
+                View Digital ID Card →
+            </a>
+        </div>
+
+        <div class="card-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h4 style="color: var(--primary); font-size: 16px; margin-bottom: 6px;">🖨️ Physical Print & PDF</h4>
+                <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.4;">
+                    Print standard CR80 wallet badge specification on cardstock or PVC, or save as high-resolution digital copy.
+                </p>
+            </div>
+            <a href="index.html?action=print" class="btn btn-secondary" style="margin-top: 16px;">
+                Print Badge Sheet →
+            </a>
+        </div>
+    </div>
+
+</main>
+
+<!-- =======================================================
+     MODAL: RAISE NEW QUERY / CORRECTION REQUEST
+     ======================================================= -->
+<div class="modal-overlay" id="raiseQueryModal">
+    <div class="modal-box" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3>Submit ID Query / Correction Request</h3>
+            <button class="modal-close" onclick="closeRaiseQueryModal()">&times;</button>
+        </div>
+
+        <form id="raiseQueryForm" onsubmit="handleStudentSubmitQuery(event)">
+            <div class="modal-body">
+                <div style="background: #f8fafc; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; border: 1px solid var(--border); font-size: 13px; color: var(--text-muted);">
+                    Submitting request for: <strong id="queryModalStudentName" style="color: var(--primary);">Student Name</strong> (<span id="queryModalStudentId" style="font-family: monospace;">ID</span>)
+                </div>
+
+                <div class="form-group">
+                    <label for="queryCategory">Query / Request Category *</label>
+                    <select id="queryCategory" class="form-control" onchange="handleCategorySelectionChange()" required>
+                        <option value="Address Correction">📍 Address Correction / Change</option>
+                        <option value="Residence Category & Color Theme">⭐ Change Residence Status (Dayscholar / Hostel)</option>
+                        <option value="Blood Group Correction">🩸 Blood Group Correction</option>
+                        <option value="Name / Details Correction">👤 Name Spelling / Department Correction</option>
+                        <option value="Lost / Damaged ID Card">🪪 Lost / Damaged Card Replacement</option>
+                        <option value="General ID Issue">❓ Other ID Card Query</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="querySubject">Subject / Short Summary *</label>
+                    <input type="text" id="querySubject" class="form-control" placeholder="e.g. Request to update permanent address" required>
+                </div>
+
+                <!-- Proposed Value Field (Dynamically tailored) -->
+                <div class="form-group" id="proposedChangeGroup">
+                    <label for="queryProposedValue" id="proposedLabel">Requested New Address *</label>
+                    <textarea id="queryProposedValue" class="form-control" rows="2" placeholder="e.g. Flat 402, Green Avenue Residency, Hyderabad, TS 500081"></textarea>
+                    <small style="color: var(--text-muted); font-size: 11.5px;">Enter the exact new data you want printed on your official Joy University ID card.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="queryMessage">Detailed Explanation / Reason *</label>
+                    <textarea id="queryMessage" class="form-control" rows="3" placeholder="Provide full details or reasons for this request to assist the ID administrator..." required></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeRaiseQueryModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="btnSubmitQuery">
+                    📨 Send Query to Admin
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+    // URL parameter helper for prototype demo & testing
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("studentId")) {
+        Storage.setSession(urlParams.get("studentId"), 'student');
+    } else if (!Storage.getSession().userId || Storage.getSession().role !== 'student') {
+        // Default to GONGITI AHALYA for direct prototype evaluation
+        Storage.setSession("2025BTAM424", 'student');
+    }
+
+    // Ensure student is logged in
+    const student = Auth.requireStudentAuth();
+    if (student) {
+        renderStudentDashboard();
+        if (urlParams.has("raiseQuery")) {
+            openRaiseQueryModal();
+        }
+    }
+
+    function renderStudentDashboard() {
+        const currentStudent = Storage.getStudentById(student.studentId) || student;
+
+        document.getElementById("headerStudentName").textContent = currentStudent.name;
+        document.getElementById("welcomeName").textContent = currentStudent.name;
+        document.getElementById("profileFullName").textContent = currentStudent.name;
+        document.getElementById("profileStudentId").textContent = currentStudent.studentId;
+        document.getElementById("profileDepartment").textContent = currentStudent.department;
+        document.getElementById("profileYear").textContent = currentStudent.year;
+        document.getElementById("profileDOB").textContent = currentStudent.dob;
+        document.getElementById("profileBloodGroup").textContent = currentStudent.bloodGroup;
+        document.getElementById("profileEmail").textContent = currentStudent.email || `${currentStudent.studentId.toLowerCase()}@joyuniversity.edu.in`;
+        document.getElementById("profilePhone").textContent = currentStudent.phone || "+91 4637 - 231812";
+        
+        // Permanent Address & Category
+        document.getElementById("profileAddress").textContent = currentStudent.address || "Joy University Campus, Vadakkankulam, TN";
+        const isDayscholar = currentStudent.category === 'DAYSCHOLAR' || currentStudent.cardTheme === 'navy' || (currentStudent.name && currentStudent.name.toUpperCase().includes('AHALYA'));
+        document.getElementById("profileCategory").innerHTML = isDayscholar 
+            ? '<span class="status-pill" style="background:#eff6ff;color:#003b80;border:1px solid #bfdbfe;font-weight:700;">⭐ DAYSCHOLAR (Navy Blue Card)</span>' 
+            : `<span class="status-pill" style="background:#fef2f2;color:#991b1b;border:1px solid #fecaca;font-weight:700;">🏠 HOSTEL (${currentStudent.hostel || 'DEVASAHAYAM'} - Red Card)</span>`;
+
+        document.getElementById("profileValidity").textContent = `Issued: ${currentStudent.issueDate || '08/2024'} | Valid Thru: ${currentStudent.validThru || '06/2027'}`;
+
+        // Load photo or generated SVG avatar
+        const savedPhoto = Storage.getPhoto(currentStudent.studentId);
+        document.getElementById("profilePhoto").src = savedPhoto || generateSvgAvatar(currentStudent.name);
+
+        // Render Queries History
+        renderStudentQueries(currentStudent.studentId);
+    }
+
+    function renderStudentQueries(studentId) {
+        const container = document.getElementById("studentQueriesHistory");
+        if (!container) return;
+        container.innerHTML = "";
+
+        const queries = Storage.getQueriesByStudentId(studentId);
+
+        if (queries.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 32px 20px; background: #f8fafc; border-radius: 12px; border: 1.5px dashed var(--border);">
+                    <div style="font-size: 32px; margin-bottom: 6px;">📋</div>
+                    <h4 style="font-size: 15px; color: var(--text-main); margin-bottom: 4px;">No Queries Submitted Yet</h4>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+                        If any details on your ID card (such as your address, name, or photo) require correction, you can submit a query directly to the administration.
+                    </p>
+                    <button class="btn btn-secondary btn-sm" onclick="openRaiseQueryModal()">
+                        ➕ Raise Your First Query
+                    </button>
+                </div>
+            `;
+            return;
+        }
+
+        queries.forEach(q => {
+            const isPending = q.status === "Pending";
+            const isResolved = q.status === "Resolved";
+            const card = document.createElement("div");
+            card.className = `query-card ${isPending ? 'pending' : 'resolved'}`;
+
+            // Proposed change badge
+            let proposedHtml = "";
+            if (q.proposedData && Object.keys(q.proposedData).length > 0) {
+                if (q.proposedData.address) {
+                    proposedHtml = `
+                        <div class="proposed-change-box">
+                            <span>📍</span>
+                            <div><strong>Requested Address:</strong> ${q.proposedData.address}</div>
+                        </div>
+                    `;
+                } else if (q.proposedData.bloodGroup) {
+                    proposedHtml = `
+                        <div class="proposed-change-box">
+                            <span>🩸</span>
+                            <div><strong>Requested Blood Group:</strong> ${q.proposedData.bloodGroup}</div>
+                        </div>
+                    `;
+                } else if (q.proposedData.category) {
+                    proposedHtml = `
+                        <div class="proposed-change-box">
+                            <span>⭐</span>
+                            <div><strong>Requested Status:</strong> ${q.proposedData.category}</div>
+                        </div>
+                    `;
+                }
+            }
+
+            // Resolution block
+            let resolutionBlockHtml = "";
+            if (isResolved && q.adminSolution) {
+                resolutionBlockHtml = `
+                    <div class="admin-solution-display">
+                        <div style="font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                            🛡️ Administrator Solution & Resolution Note:
+                        </div>
+                        <div style="font-size: 13.5px; line-height: 1.45;">${q.adminSolution}</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 8px;">
+                            <span style="font-size: 11px; color: #047857; font-weight: 600;">
+                                ✓ Resolved on: ${q.resolvedAt || 'Verified & Updated'}
+                            </span>
+                            <a href="index.html" class="btn btn-primary btn-sm" style="font-size: 11.5px; padding: 4px 10px;">
+                                🪪 View Updated ID Card →
+                            </a>
+                        </div>
+                    </div>
+                `;
+            } else if (isPending) {
+                resolutionBlockHtml = `
+                    <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px 14px; font-size: 12.5px; color: #92400e; margin-top: 10px;">
+                        ⏳ <strong>Under Review:</strong> Your query has been received by the Joy University ID administration. Once the admin resolves it and updates your details, the solution will appear here.
+                    </div>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="query-card-header">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span class="query-id-tag">${q.queryId}</span>
+                        <span class="query-category-tag">${q.category}</span>
+                        <span style="font-size: 12px; color: var(--text-muted);">🕒 ${q.createdAt}</span>
+                    </div>
+                    <div>
+                        ${isPending 
+                            ? '<span class="status-pill" style="background:#fef3c7; color:#b45309; border:1px solid #fde68a;">🟡 Pending Admin Review</span>' 
+                            : '<span class="status-pill" style="background:#ecfdf5; color:#047857; border:1px solid #a7f3d0;">🟢 Resolved & Updated</span>'}
+                    </div>
+                </div>
+
+                <div class="query-subject">${q.subject}</div>
+                <div class="query-message-text">"${q.message}"</div>
+                ${proposedHtml}
+                ${resolutionBlockHtml}
+            `;
+
+            container.appendChild(card);
+        });
+    }
+
+    // Modal Handlers
+    function openRaiseQueryModal() {
+        document.getElementById("queryModalStudentName").textContent = student.name;
+        document.getElementById("queryModalStudentId").textContent = student.studentId;
+        document.getElementById("raiseQueryForm").reset();
+        handleCategorySelectionChange();
+        document.getElementById("raiseQueryModal").classList.add("active");
+    }
+
+    function closeRaiseQueryModal() {
+        document.getElementById("raiseQueryModal").classList.remove("active");
+    }
+
+    function handleCategorySelectionChange() {
+        const cat = document.getElementById("queryCategory").value;
+        const proposedLabel = document.getElementById("proposedLabel");
+        const proposedInput = document.getElementById("queryProposedValue");
+        const subjectInput = document.getElementById("querySubject");
+
+        if (cat === "Address Correction") {
+            proposedLabel.textContent = "📍 Requested New Permanent Residential Address *";
+            proposedInput.placeholder = "e.g. Flat 402, Green Avenue Residency, Hyderabad, TS 500081";
+            subjectInput.value = "Request to update permanent residential address";
+        } else if (cat === "Residence Category & Color Theme") {
+            proposedLabel.textContent = "⭐ Desired Category (Dayscholar or Hostel) *";
+            proposedInput.placeholder = "e.g. Dayscholar (Navy Blue badge) / Hostel (Devasahayam)";
+            subjectInput.value = "Request to update residence category to Dayscholar";
+        } else if (cat === "Blood Group Correction") {
+            proposedLabel.textContent = "🩸 Correct Blood Group / Date of Birth *";
+            proposedInput.placeholder = "e.g. Correct Blood Group: B-";
+            subjectInput.value = "Correction of blood group on student ID card";
+        } else if (cat === "Name / Details Correction") {
+            proposedLabel.textContent = "👤 Correct Spelling of Name / Department *";
+            proposedInput.placeholder = "e.g. Exact Full Name: " + student.name;
+            subjectInput.value = "Correction of spelling in student name";
+        } else {
+            proposedLabel.textContent = "Requested Detail / Correction (Optional)";
+            proposedInput.placeholder = "Enter any specific detail you would like updated...";
+            subjectInput.value = "";
+        }
+    }
+
+    function handleStudentSubmitQuery(e) {
+        e.preventDefault();
+        const category = document.getElementById("queryCategory").value;
+        const subject = document.getElementById("querySubject").value.trim();
+        const message = document.getElementById("queryMessage").value.trim();
+        const proposedValue = document.getElementById("queryProposedValue").value.trim();
+
+        const proposedData = {};
+        if (category === "Address Correction" && proposedValue) {
+            proposedData.address = proposedValue;
+        } else if (category === "Blood Group Correction" && proposedValue) {
+            proposedData.bloodGroup = proposedValue;
+        } else if (category.includes("Residence") && proposedValue) {
+            proposedData.category = proposedValue.toUpperCase().includes("DAY") ? "DAYSCHOLAR" : "HOSTEL";
+            proposedData.cardTheme = proposedData.category === "DAYSCHOLAR" ? "navy" : "red";
+        }
+
+        const newQ = Storage.addQuery({
+            studentId: student.studentId,
+            studentName: student.name,
+            department: student.department,
+            category: category,
+            subject: subject,
+            message: message,
+            proposedData: proposedData
+        });
+
+        closeRaiseQueryModal();
+        renderStudentQueries(student.studentId);
+
+        alert(`✅ Your query (${newQ.queryId}) has been successfully submitted to the ID administration!\n\nYou can track the admin's response and record updates right here.`);
+    }
+
+    function handlePhotoUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            alert("Please select a valid image file.");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            const photoData = evt.target.result;
+            Storage.savePhoto(student.studentId, photoData);
+            document.getElementById("profilePhoto").src = photoData;
+            alert("Profile photo updated successfully!");
+        };
+        reader.readAsDataURL(file);
+    }
+</script>
+
+</body>
+</html>
