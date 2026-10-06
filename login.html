@@ -3,182 +3,720 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joy University - Student ID Card Management System</title>
+    <title>Joy University - Student Portal Login</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* ==========================================================
+           JOY UNIVERSITY - PREMIUM MIDNIGHT PLUM & CHAMPAGNE GOLD THEME
+           Clean, Centered, Professional Digital Portal Login
+           ========================================================== */
+
+        :root {
+            --midnight-plum: #1a0826;
+            --midnight-plum-dark: #12041b;
+            --midnight-plum-light: #2c0d3e;
+            --rich-plum: #4a154b;
+            --rich-plum-hover: #581845;
+            --plum-accent: #6b1e5a;
+            --champagne-gold: #d4af37;
+            --champagne-gold-light: #f3e5ab;
+            --champagne-gold-dark: #b89124;
+            --soft-ivory: #faf7f2;
+            --ivory-surface: #ffffff;
+            --muted-lavender: #d8cde0;
+            --lavender-focus: #c5b3d4;
+            --text-heading: #260733;
+            --text-body: #423048;
+            --text-muted: #76637d;
+        }
+
+        /* Page Canvas: Deep Midnight Plum */
+        body.login-page-body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 20% 15%, rgba(107, 30, 90, 0.3) 0%, transparent 45%),
+                        radial-gradient(circle at 80% 85%, rgba(212, 175, 55, 0.12) 0%, transparent 40%),
+                        linear-gradient(135deg, var(--midnight-plum-dark) 0%, var(--midnight-plum) 50%, #2a0b3d 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            position: relative;
+            box-sizing: border-box;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Subtle Ambient Gold-Plum Glow Pattern in Background */
+        body.login-page-body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(rgba(212, 175, 55, 0.05) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+        }
+
+        /* ----------------------------------------------------------
+           CENTERED LOGIN CARD: SOFT IVORY / WARM WHITE
+           ---------------------------------------------------------- */
+        .login-card-container {
+            width: 100%;
+            max-width: 420px;
+            margin: auto;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+            animation: cardEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes cardEntrance {
+            0% {
+                opacity: 0;
+                transform: translateY(16px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-card {
+            width: 100%;
+            box-sizing: border-box;
+            background: var(--ivory-surface);
+            border-radius: 20px;
+            box-shadow: 0 24px 55px rgba(10, 2, 16, 0.48),
+                        0 2px 8px rgba(0, 0, 0, 0.12),
+                        0 0 0 1px rgba(212, 175, 55, 0.22);
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+        }
+
+        /* Card Header: Midnight Plum with Champagne Crest */
+        .login-card-header {
+            background: linear-gradient(135deg, #180521 0%, #2f0b3f 60%, #461259 100%);
+            color: #ffffff;
+            text-align: center;
+            padding: 30px 24px 22px 24px;
+            position: relative;
+            border-bottom: 2px solid var(--champagne-gold);
+        }
+
+        .brand-crest {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px auto;
+            background: linear-gradient(135deg, #fdf8e6 0%, var(--champagne-gold) 100%);
+            color: #1a0826;
+            font-weight: 900;
+            font-size: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+            border: 1.5px solid #fff5cc;
+        }
+
+        .login-card-header h2 {
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            margin: 0 0 4px 0;
+        }
+
+        .login-card-header p {
+            font-size: 13px;
+            color: #e2d2ea;
+            margin: 0;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            background: rgba(212, 175, 55, 0.16);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            padding: 3px 10px;
+            border-radius: 14px;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--champagne-gold-light);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .security-badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--champagne-gold);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--champagne-gold);
+        }
+
+        /* ----------------------------------------------------------
+           ROLE TABS (Student Portal vs Admin Portal)
+           ---------------------------------------------------------- */
+        .tab-selector {
+            display: flex;
+            background: #f5eff8;
+            border-bottom: 1px solid var(--muted-lavender);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 14px;
+            font-size: 13.5px;
+            font-weight: 700;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .tab-btn.active {
+            background: var(--ivory-surface);
+            color: var(--text-heading);
+            border-bottom: 2.5px solid var(--champagne-gold);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--rich-plum);
+            background: #ede3f2;
+        }
+
+        /* ----------------------------------------------------------
+           LOGIN FORM BODY & INPUTS
+           ---------------------------------------------------------- */
+        .login-form-body {
+            padding: 24px 22px;
+            box-sizing: border-box;
+            background: var(--ivory-surface);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-heading);
+        }
+
+        .form-group label span.sub-hint {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 13px;
+            color: var(--champagne-gold-dark);
+            font-size: 15px;
+            pointer-events: none;
+            transition: transform 0.2s ease;
+        }
+
+        .form-control {
+            width: 100%;
+            min-width: 0;
+            padding: 12px 14px 12px 40px;
+            border: 1.5px solid var(--muted-lavender);
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-heading);
+            outline: none;
+            background: var(--soft-ivory);
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .form-control::placeholder {
+            color: #9f8ea5;
+            font-weight: 500;
+        }
+
+        .form-control:focus {
+            background: #ffffff;
+            border-color: var(--rich-plum);
+            box-shadow: 0 0 0 3px rgba(74, 21, 75, 0.16);
+        }
+
+        .form-control:focus ~ .input-icon {
+            transform: scale(1.1);
+        }
+
+        /* Error Alert Banner: Soft Red */
+        .alert-message {
+            display: none;
+            padding: 10px 14px;
+            border-radius: 9px;
+            font-size: 12.5px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.4;
+            background: #fff1f2;
+            color: #9f1239;
+            border: 1.5px solid #fecdd3;
+            animation: alertShake 0.3s ease-in-out;
+        }
+
+        @keyframes alertShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        /* Dynamic Student Found Badge */
+        .student-found-badge {
+            display: none;
+            margin-top: 6px;
+            padding: 6px 11px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #166534;
+            align-items: center;
+            gap: 6px;
+            animation: fadeIn 0.25s ease forwards;
+        }
+
+        .student-found-badge strong {
+            color: var(--rich-plum);
+            font-weight: 700;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Subtle Utility Links */
+        .portal-help-links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 14px;
+            padding: 0 2px;
+        }
+
+        .portal-help-link {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--rich-plum);
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s ease;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .portal-help-link:hover {
+            color: var(--champagne-gold-dark);
+            text-decoration: underline;
+        }
+
+        /* ----------------------------------------------------------
+           PRIMARY BUTTON: RICH PLUM -> HOVER CHAMPAGNE GOLD
+           ---------------------------------------------------------- */
+        .btn-portal-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--rich-plum) 0%, var(--plum-accent) 100%);
+            color: #ffffff;
+            border: 1.5px solid transparent;
+            padding: 13px 20px;
+            font-size: 14.5px;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 6px 18px rgba(74, 21, 75, 0.32);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: 0.3px;
+            margin-top: 6px;
+        }
+
+        /* Hover: Shifts smoothly to Champagne Gold with Deep Plum text */
+        .btn-portal-submit:hover {
+            background: linear-gradient(135deg, #c59b27 0%, var(--champagne-gold) 60%, #e6ca65 100%);
+            color: var(--midnight-plum);
+            border-color: #ecd58b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.38);
+        }
+
+        .btn-portal-submit:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(74, 21, 75, 0.25);
+        }
+
+        /* ----------------------------------------------------------
+           RESPONSIVE MOBILE STYLING
+           ---------------------------------------------------------- */
+        @media (max-width: 480px) {
+            body.login-page-body {
+                padding: 16px 12px;
+                display: block;
+            }
+            .login-card-container {
+                max-width: 100%;
+                margin: 0 auto;
+            }
+            .login-card-header {
+                padding: 24px 16px 18px 16px;
+            }
+            .login-card-header h2 {
+                font-size: 20px;
+            }
+            .login-form-body {
+                padding: 20px 18px;
+            }
+            .tab-btn {
+                padding: 10px 8px;
+                font-size: 13px;
+            }
+        }
+
+        /* Bottom Footer Info */
+        .portal-bottom-bar {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 12px;
+            color: #bfaec9;
+        }
+
+        .portal-bottom-bar a {
+            color: var(--champagne-gold-light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .portal-bottom-bar a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body class="login-page-body">
 
-<div class="login-card">
-    <div class="login-card-header">
-        <div style="display:flex; justify-content:center; margin-bottom: 12px;">
-            <div class="brand-logo" style="width: 50px; height: 50px; font-size: 24px;">JU</div>
-        </div>
-        <h2>Joy University</h2>
-        <p>Smart ID Card Management System</p>
-    </div>
+<div class="login-card-container">
 
-    <!-- Role Switcher Tabs -->
-    <div class="tab-selector">
-        <button type="button" class="tab-btn active" id="tabStudent" onclick="switchTab('student')">
-            🎓 Student Portal
-        </button>
-        <button type="button" class="tab-btn" id="tabAdmin" onclick="switchTab('admin')">
-            🛡️ Admin Portal
-        </button>
-    </div>
+    <div class="login-card">
 
-    <!-- STUDENT LOGIN FORM -->
-    <div id="studentLoginSection" class="login-form-body">
-        <div id="studentAlert" class="alert-message alert-error"></div>
-
-        <form id="studentLoginForm" onsubmit="handleStudentLogin(event)">
-            <div class="form-group">
-                <label for="studentId">Student Roll / ID Number</label>
-                <input
-                    type="text"
-                    id="studentId"
-                    class="form-control"
-                    placeholder="e.g. 2024BTDS014"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="dob">Date of Birth (DD/MM/YYYY)</label>
-                <input
-                    type="text"
-                    id="dob"
-                    class="form-control"
-                    placeholder="DD/MM/YYYY"
-                    required
-                >
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 6px;">
-                Sign In to Student Portal →
-            </button>
-        </form>
-
-        <!-- 1-CLICK DEMO LOGIN QUICK CHIPS -->
-        <div class="demo-credentials-box">
-            <h4>⚡ Quick 1-Click Demo Students:</h4>
-            <div class="demo-chips" id="demoChipsContainer">
-                <!-- Dynamically populated or rendered -->
+        <!-- =======================================================
+             CARD HEADER: UNIVERSITY NAME & SUBTITLE
+             ======================================================= -->
+        <div class="login-card-header">
+            <div class="brand-crest">JU</div>
+            <h2>Joy University</h2>
+            <p>Student ID Card Management System</p>
+            <div class="security-badge">
+                <span class="security-badge-dot"></span>
+                <span>Secure Student Portal</span>
             </div>
         </div>
-    </div>
 
-    <!-- ADMIN LOGIN FORM -->
-    <div id="adminLoginSection" class="login-form-body" style="display: none;">
-        <div id="adminAlert" class="alert-message alert-error"></div>
-
-        <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
-            <div class="form-group">
-                <label for="adminUser">Administrator Username</label>
-                <input
-                    type="text"
-                    id="adminUser"
-                    class="form-control"
-                    placeholder="admin"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="adminPass">Password</label>
-                <input
-                    type="password"
-                    id="adminPass"
-                    class="form-control"
-                    placeholder="••••••••"
-                    required
-                >
-            </div>
-
-            <button type="submit" class="btn btn-gold" style="width: 100%; padding: 12px; margin-top: 6px;">
-                Enter Admin Management Portal →
+        <!-- =======================================================
+             ROLE SWITCHER TABS: STUDENT PORTAL / ADMIN PORTAL
+             ======================================================= -->
+        <div class="tab-selector">
+            <button type="button" class="tab-btn active" id="tabStudent" onclick="switchRoleTab('student')">
+                🎓 Student Portal
             </button>
-        </form>
-
-        <div class="demo-credentials-box">
-            <h4>⚡ Quick Admin Demo:</h4>
-            <div style="font-size: 12.5px; color: #475569; margin-bottom: 8px;">
-                Username: <code>admin</code> | Password: <code>admin123</code>
-            </div>
-            <button type="button" class="btn btn-secondary btn-icon" style="width: 100%;" onclick="quickFillAdmin()">
-                Auto-fill Admin Credentials
+            <button type="button" class="tab-btn" id="tabAdmin" onclick="switchRoleTab('admin')">
+                🛡️ Admin Portal
             </button>
         </div>
+
+        <!-- =======================================================
+             1. STUDENT LOGIN SECTION
+             ======================================================= -->
+        <div id="studentLoginSection" class="login-form-body">
+            
+            <!-- Clean Error Alert -->
+            <div id="studentAlert" class="alert-message" role="alert"></div>
+
+            <form id="studentLoginForm" onsubmit="handleStudentLogin(event)" autocomplete="off">
+                
+                <!-- Student ID Input -->
+                <div class="form-group">
+                    <label for="studentId">
+                        <span>Student ID</span>
+                        <span class="sub-hint">Roll Number</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🪪</span>
+                        <input
+                            type="text"
+                            id="studentId"
+                            class="form-control"
+                            placeholder="e.g. 2025BTAM424"
+                            required
+                            autofocus
+                            oninput="handleStudentIdInput(this.value)"
+                        >
+                    </div>
+                    <div id="studentFoundBadge" class="student-found-badge">
+                        <span>Student Found ✓</span>
+                        <strong id="studentFoundName"></strong>
+                    </div>
+                </div>
+
+                <!-- Date of Birth Input -->
+                <div class="form-group">
+                    <label for="dob">
+                        <span>Date of Birth</span>
+                        <span class="sub-hint">Password (DD/MM/YYYY)</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">📅</span>
+                        <input
+                            type="text"
+                            id="dob"
+                            class="form-control"
+                            placeholder="DD/MM/YYYY"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <!-- Login Button -->
+                <button type="submit" id="btnStudentLogin" class="btn-portal-submit">
+                    <span>Access My Digital ID</span>
+                    <span style="font-size: 16px;">→</span>
+                </button>
+
+                <!-- Subtle Links: Verify Student ID / Help & Support -->
+                <div class="portal-help-links">
+                    <button type="button" class="portal-help-link" onclick="quickVerifyId()">
+                        <span>🔍 Verify Student ID</span>
+                    </button>
+                    <button type="button" class="portal-help-link" onclick="showHelpModal()">
+                        <span>💬 Help / Support</span>
+                    </button>
+                </div>
+            </form>
+
+        </div>
+
+        <!-- =======================================================
+             2. ADMIN LOGIN SECTION
+             ======================================================= -->
+        <div id="adminLoginSection" class="login-form-body" style="display: none;">
+            
+            <div id="adminAlert" class="alert-message" role="alert"></div>
+
+            <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" autocomplete="off">
+                <div class="form-group">
+                    <label for="adminUser">Administrator Username</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input
+                            type="text"
+                            id="adminUser"
+                            class="form-control"
+                            placeholder="admin"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="adminPass">Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input
+                            type="password"
+                            id="adminPass"
+                            class="form-control"
+                            placeholder="••••••••"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-portal-submit">
+                    <span>Enter Admin Portal</span>
+                    <span style="font-size: 16px;">→</span>
+                </button>
+            </form>
+
+        </div>
+
     </div>
+
+    <!-- Bottom Footer Notice -->
+    <div class="portal-bottom-bar">
+        Joy University ID Management System • <a href="index.html">Preview ID Card</a>
+    </div>
+
 </div>
 
+<!-- Core System Script -->
 <script src="script.js"></script>
 <script>
-    // Tab switching
-    function switchTab(role) {
+    // -------------------------------------------------------------
+    // ROLE TAB SWITCHING (Student vs Admin)
+    // -------------------------------------------------------------
+    function switchRoleTab(role) {
         const tabStudent = document.getElementById("tabStudent");
         const tabAdmin = document.getElementById("tabAdmin");
         const studentSec = document.getElementById("studentLoginSection");
         const adminSec = document.getElementById("adminLoginSection");
+
+        hideAlerts();
 
         if (role === 'admin') {
             tabAdmin.classList.add("active");
             tabStudent.classList.remove("active");
             adminSec.style.display = "block";
             studentSec.style.display = "none";
+            document.getElementById("adminUser").focus();
         } else {
             tabStudent.classList.add("active");
             tabAdmin.classList.remove("active");
             studentSec.style.display = "block";
             adminSec.style.display = "none";
+            document.getElementById("studentId").focus();
         }
     }
 
-    // Render 1-click Demo Chips
-    function renderDemoChips() {
-        const container = document.getElementById("demoChipsContainer");
+    function hideAlerts() {
+        document.getElementById("studentAlert").style.display = "none";
+        document.getElementById("adminAlert").style.display = "none";
+    }
+
+    // -------------------------------------------------------------
+    // DYNAMIC REAL-TIME STUDENT LOOKUP
+    // -------------------------------------------------------------
+    function handleStudentIdInput(val) {
+        const trimmed = (val || '').trim().toUpperCase();
+        const badge = document.getElementById("studentFoundBadge");
+        const nameEl = document.getElementById("studentFoundName");
+        if (!badge || !nameEl) return;
+
+        if (!trimmed) {
+            badge.style.display = "none";
+            return;
+        }
+
         const students = Storage.getAllStudents();
-        container.innerHTML = "";
-
-        students.forEach(st => {
-            const chip = document.createElement("button");
-            chip.type = "button";
-            chip.className = "demo-chip";
-            chip.textContent = st.name.split(' ')[0] + " (" + st.studentId + ")";
-            chip.title = `Click to auto-fill & login as ${st.name}`;
-            chip.onclick = () => {
-                document.getElementById("studentId").value = st.studentId;
-                document.getElementById("dob").value = st.dob;
-                // Auto login directly on chip click for fast testing
-                Auth.loginStudent(st.studentId, st.dob);
-                window.location.href = "dashboard.html";
-            };
-            container.appendChild(chip);
-        });
+        const match = students.find(s => s.studentId.toUpperCase() === trimmed);
+        if (match) {
+            nameEl.textContent = match.name;
+            badge.style.display = "inline-flex";
+        } else {
+            badge.style.display = "none";
+        }
     }
 
-    function quickFillAdmin() {
-        document.getElementById("adminUser").value = "admin";
-        document.getElementById("adminPass").value = "admin123";
+    function quickVerifyId() {
+        const val = document.getElementById("studentId").value.trim().toUpperCase();
+        if (!val) {
+            showStudentError("Please enter a Student ID to verify.");
+            document.getElementById("studentId").focus();
+            return;
+        }
+        const students = Storage.getAllStudents();
+        const match = students.find(s => s.studentId.toUpperCase() === val);
+        if (match) {
+            handleStudentIdInput(val);
+            alert(`✓ Verified Student Record:\n• Name: ${match.name}\n• ID: ${match.studentId}\n• Department: ${match.department}\n• Status: ${match.category}`);
+        } else {
+            showStudentError(`Student ID "${val}" was not found in university records.`);
+        }
     }
 
+    function showHelpModal() {
+        alert("Joy University ID Card Portal Help:\n\n• Student ID: Enter your university roll number (e.g. 2025BTAM424).\n• Password: Enter your Date of Birth in DD/MM/YYYY format.\n\nFor technical assistance or profile corrections, contact support@joyuniversity.edu.in");
+    }
+
+    // -------------------------------------------------------------
+    // STUDENT AUTHENTICATION
+    // -------------------------------------------------------------
     function handleStudentLogin(e) {
         e.preventDefault();
         const alertBox = document.getElementById("studentAlert");
         alertBox.style.display = "none";
 
-        const id = document.getElementById("studentId").value.trim();
+        const id = document.getElementById("studentId").value.trim().toUpperCase();
         const dob = document.getElementById("dob").value.trim();
 
+        if (!id) {
+            showStudentError("Please enter your Student ID.");
+            return;
+        }
+        if (!dob) {
+            showStudentError("Please enter your Date of Birth in DD/MM/YYYY format.");
+            return;
+        }
+
         const result = Auth.loginStudent(id, dob);
-        if (result.success) {
-            window.location.href = "dashboard.html";
+        if (result.success && result.student) {
+            // Save logged-in student in localStorage key "loggedInUser"
+            localStorage.setItem("loggedInUser", result.student.studentId);
+            localStorage.setItem("userRole", "student");
+
+            const submitBtn = document.getElementById("btnStudentLogin");
+            submitBtn.innerHTML = `<span>✓ Verified! Redirecting...</span>`;
+            submitBtn.style.background = "#10b981";
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 300);
         } else {
-            alertBox.textContent = result.message;
-            alertBox.style.display = "block";
+            showStudentError(result.message || "Invalid Student ID or Date of Birth. Please check your credentials.");
         }
     }
 
+    function showStudentError(msg) {
+        const alertBox = document.getElementById("studentAlert");
+        alertBox.textContent = "⚠️ " + msg;
+        alertBox.style.display = "block";
+    }
+
+    // -------------------------------------------------------------
+    // ADMIN AUTHENTICATION
+    // -------------------------------------------------------------
     function handleAdminLogin(e) {
         e.preventDefault();
         const alertBox = document.getElementById("adminAlert");
@@ -189,20 +727,37 @@
 
         const result = Auth.loginAdmin(user, pass);
         if (result.success) {
+            localStorage.setItem("loggedInUser", "ADMIN_001");
+            localStorage.setItem("userRole", "admin");
             window.location.href = "admin.html";
         } else {
-            alertBox.textContent = result.message;
+            alertBox.textContent = "⚠️ " + (result.message || "Invalid administrator credentials (use admin / admin123).");
             alertBox.style.display = "block";
         }
     }
 
-    // Check URL params for role=admin
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("role") === "admin") {
-        switchTab("admin");
-    }
+    // -------------------------------------------------------------
+    // INITIALIZATION & URL PARAMETER HANDLING
+    // -------------------------------------------------------------
+    window.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get("role") === "admin") {
+            switchRoleTab("admin");
+        }
 
-    renderDemoChips();
+        // Test parameters for automated verification
+        if (urlParams.get("testId")) {
+            const tId = urlParams.get("testId");
+            document.getElementById("studentId").value = tId;
+            handleStudentIdInput(tId);
+        }
+        if (urlParams.get("testDob")) {
+            document.getElementById("dob").value = urlParams.get("testDob");
+        }
+        if (urlParams.has("testError")) {
+            showStudentError("Incorrect Date of Birth for this Student ID.");
+        }
+    });
 </script>
 
 </body>
