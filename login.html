@@ -3,289 +3,647 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joy University - Student Portal Login</title>
+    <title>Joy University - Student ID Card Management System</title>
     <link rel="stylesheet" href="style.css">
     <style>
         /* ==========================================================
-           JOY UNIVERSITY - PREMIUM MIDNIGHT PLUM & CHAMPAGNE GOLD THEME
-           Clean, Centered, Professional Digital Portal Login
+           JOY UNIVERSITY - MODERN VIOLET / PLUM GEOMETRIC DESIGN
+           Inspired by Dribbble Modern Glassmorphism Portal Design
            ========================================================== */
 
         :root {
-            --midnight-plum: #1a0826;
-            --midnight-plum-dark: #12041b;
-            --midnight-plum-light: #2c0d3e;
-            --rich-plum: #4a154b;
-            --rich-plum-hover: #581845;
-            --plum-accent: #6b1e5a;
-            --champagne-gold: #d4af37;
-            --champagne-gold-light: #f3e5ab;
-            --champagne-gold-dark: #b89124;
-            --soft-ivory: #faf7f2;
-            --ivory-surface: #ffffff;
-            --muted-lavender: #d8cde0;
-            --lavender-focus: #c5b3d4;
-            --text-heading: #260733;
-            --text-body: #423048;
-            --text-muted: #76637d;
+            --bg-deep-violet: #160422;
+            --bg-midnight-plum: #280a3a;
+            --bg-plum-glow: #3d1054;
+            --card-glass-bg: rgba(255, 255, 255, 0.08);
+            --card-glass-border: rgba(255, 255, 255, 0.14);
+            --input-glass-bg: rgba(255, 255, 255, 0.12);
+            --input-glass-border: rgba(255, 255, 255, 0.18);
+            --coral-gradient-start: #ff7243;
+            --coral-gradient-end: #e9235e;
+            --coral-glow: rgba(233, 35, 94, 0.42);
+            --text-pure: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.72);
+            --text-subtle: rgba(255, 255, 255, 0.5);
+            --pill-glow-violet: rgba(147, 51, 234, 0.35);
+            --pill-glow-blue: rgba(99, 102, 241, 0.28);
         }
 
-        /* Page Canvas: Deep Midnight Plum */
-        body.login-page-body {
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* ----------------------------------------------------------
+           CANVAS & BACKGROUND ATMOSPHERE
+           Deep rich plum/violet with ambient radial glows
+           ---------------------------------------------------------- */
+        body.geometric-portal-body {
             min-height: 100vh;
             margin: 0;
             padding: 24px 16px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at 20% 15%, rgba(107, 30, 90, 0.3) 0%, transparent 45%),
-                        radial-gradient(circle at 80% 85%, rgba(212, 175, 55, 0.12) 0%, transparent 40%),
-                        linear-gradient(135deg, var(--midnight-plum-dark) 0%, var(--midnight-plum) 50%, #2a0b3d 100%);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle at 12% 18%, #411158 0%, transparent 40%),
+                        radial-gradient(circle at 88% 82%, #380d4f 0%, transparent 45%),
+                        radial-gradient(circle at 50% 50%, #200630 0%, transparent 70%),
+                        linear-gradient(135deg, var(--bg-deep-violet) 0%, var(--bg-midnight-plum) 50%, #13031d 100%);
             position: relative;
-            box-sizing: border-box;
-            width: 100%;
             overflow-x: hidden;
+            overflow-y: auto;
+            width: 100%;
         }
 
-        /* Subtle Ambient Gold-Plum Glow Pattern in Background */
-        body.login-page-body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: radial-gradient(rgba(212, 175, 55, 0.05) 1px, transparent 1px);
-            background-size: 28px 28px;
+        /* Abstract Background Floating Shapes */
+        .bg-decorations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        /* Giant Angled Translucent Capsule 1 */
+        .decor-capsule-1 {
+            position: absolute;
+            width: 480px;
+            height: 96px;
+            border-radius: 48px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.38) 0%, rgba(67, 20, 107, 0.05) 100%);
+            transform: rotate(-45deg);
+            top: 10%;
+            right: 8%;
+            box-shadow: 0 0 45px rgba(139, 92, 246, 0.18);
+        }
+
+        /* Angled Translucent Capsule 2 with Soft Blue Tint */
+        .decor-capsule-2 {
+            position: absolute;
+            width: 340px;
+            height: 76px;
+            border-radius: 38px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.32) 0%, rgba(30, 10, 60, 0.08) 100%);
+            transform: rotate(-45deg);
+            bottom: 4%;
+            right: 18%;
+        }
+
+        /* Small Angled Capsule 3 */
+        .decor-capsule-3 {
+            position: absolute;
+            width: 220px;
+            height: 48px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, transparent 100%);
+            transform: rotate(-45deg);
+            top: 4%;
+            right: 38%;
+        }
+
+        /* Vertical Accent Lines in Center Top */
+        .decor-vert-line-1 {
+            position: absolute;
+            top: 0;
+            left: 45%;
+            width: 3.5px;
+            height: 180px;
+            background: linear-gradient(to bottom, rgba(192, 132, 252, 0.4) 0%, transparent 100%);
+            border-radius: 2px;
+        }
+
+        .decor-vert-line-2 {
+            position: absolute;
+            top: 0;
+            left: 48%;
+            width: 3.5px;
+            height: 130px;
+            background: linear-gradient(to bottom, rgba(192, 132, 252, 0.35) 0%, transparent 100%);
+            border-radius: 2px;
+        }
+
+        /* Smooth Wavy Line SVG Art */
+        .decor-wavy-svg {
+            position: absolute;
+            top: 8%;
+            left: 20%;
+            width: 580px;
+            height: 380px;
+            opacity: 0.35;
+        }
+
+        /* Ambient Glow Blobs */
+        .decor-glow-sphere-1 {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, transparent 70%);
+            top: 25%;
+            left: 5%;
+            filter: blur(50px);
+        }
+
+        .decor-glow-sphere-2 {
+            position: absolute;
+            width: 340px;
+            height: 340px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(233, 35, 94, 0.18) 0%, transparent 70%);
+            bottom: 10%;
+            right: 5%;
+            filter: blur(60px);
+        }
+
+        /* ==========================================================
+           UNIQUE STUDENT ID CARD BACKGROUND ELEMENTS
+           ========================================================== */
+        /* Floating Stylized Smart ID Card 1 (Top Left) */
+        .bg-idcard-floating-1 {
+            position: absolute;
+            top: 8%;
+            left: 3%;
+            width: 220px;
+            height: 138px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(139, 92, 246, 0.12) 100%);
+            border: 1.5px solid rgba(168, 85, 247, 0.28);
+            transform: rotate(-16deg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(168, 85, 247, 0.18);
+            backdrop-filter: blur(8px);
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            opacity: 0.65;
+            animation: cardFloatSlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes cardFloatSlow {
+            0% { transform: rotate(-16deg) translateY(0); }
+            100% { transform: rotate(-14deg) translateY(-14px); }
+        }
+
+        /* Floating Stylized Smart ID Card 2 (Bottom Right) */
+        .bg-idcard-floating-2 {
+            position: absolute;
+            bottom: 6%;
+            right: 4%;
+            width: 240px;
+            height: 150px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(233, 35, 94, 0.1) 0%, rgba(30, 8, 44, 0.4) 100%);
+            border: 1.5px solid rgba(233, 35, 94, 0.3);
+            transform: rotate(18deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(233, 35, 94, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            opacity: 0.55;
+            animation: cardFloatReverse 9s ease-in-out infinite alternate;
+        }
+
+        @keyframes cardFloatReverse {
+            0% { transform: rotate(18deg) translateY(0); }
+            100% { transform: rotate(20deg) translateY(12px); }
+        }
+
+        /* Card Miniature Wireframe Elements */
+        .wire-card-chip {
+            width: 28px;
+            height: 22px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border: 1px solid #fef3c7;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+        }
+
+        .wire-card-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .wire-card-line {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 2px;
+        }
+
+        .wire-card-barcode {
+            display: flex;
+            gap: 2px;
+            align-items: flex-end;
+            height: 14px;
+        }
+
+        .wire-card-barcode span {
+            background: rgba(255, 255, 255, 0.35);
+            width: 2px;
+            height: 100%;
+        }
+
+        /* RFID / NFC Signal Waves in Background */
+        .bg-rfid-waves {
+            position: absolute;
+            top: 22%;
+            right: 12%;
+            opacity: 0.28;
+        }
+
+        /* Smart Card Circuit Lines SVG */
+        .bg-circuits-svg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 450px;
+            height: 300px;
+            opacity: 0.22;
         }
 
         /* ----------------------------------------------------------
-           CENTERED LOGIN CARD: SOFT IVORY / WARM WHITE
+           MAIN SHOWCASE CARD (CONTAINER)
            ---------------------------------------------------------- */
-        .login-card-container {
+        .portal-showcase-card {
             width: 100%;
-            max-width: 420px;
-            margin: auto;
-            box-sizing: border-box;
+            max-width: 1020px;
+            min-height: 580px;
+            background: rgba(30, 8, 44, 0.82);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 26px;
+            box-shadow: 0 35px 85px rgba(0, 0, 0, 0.68),
+                        0 0 0 1px rgba(255, 255, 255, 0.08);
+            display: flex;
             position: relative;
             z-index: 1;
-            animation: cardEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            overflow: hidden;
+            animation: cardFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        @keyframes cardEntrance {
-            0% {
+        @keyframes cardFadeIn {
+            from {
                 opacity: 0;
-                transform: translateY(16px) scale(0.98);
+                transform: translateY(18px) scale(0.98);
             }
-            100% {
+            to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
         }
 
-        .login-card {
-            width: 100%;
-            box-sizing: border-box;
-            background: var(--ivory-surface);
-            border-radius: 20px;
-            box-shadow: 0 24px 55px rgba(10, 2, 16, 0.48),
-                        0 2px 8px rgba(0, 0, 0, 0.12),
-                        0 0 0 1px rgba(212, 175, 55, 0.22);
-            overflow: hidden;
-            transition: box-shadow 0.3s ease;
-        }
-
-        /* Card Header: Midnight Plum with Champagne Crest */
-        .login-card-header {
-            background: linear-gradient(135deg, #180521 0%, #2f0b3f 60%, #461259 100%);
-            color: #ffffff;
-            text-align: center;
-            padding: 30px 24px 22px 24px;
+        /* ----------------------------------------------------------
+           LEFT COLUMN: WELCOME & BRAND
+           ---------------------------------------------------------- */
+        .showcase-left-panel {
+            flex: 1.1;
+            padding: 52px 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             position: relative;
-            border-bottom: 2px solid var(--champagne-gold);
+            z-index: 2;
         }
 
-        .brand-crest {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto 12px auto;
-            background: linear-gradient(135deg, #fdf8e6 0%, var(--champagne-gold) 100%);
-            color: #1a0826;
-            font-weight: 900;
-            font-size: 20px;
-            border-radius: 12px;
+        /* Logo: Two vertical rounded bars matching the reference */
+        .brand-crest-group {
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-            border: 1.5px solid #fff5cc;
+            gap: 14px;
         }
 
-        .login-card-header h2 {
-            font-size: 23px;
+        .brand-glyph {
+            display: flex;
+            align-items: flex-end;
+            gap: 5px;
+            height: 32px;
+        }
+
+        .brand-glyph .bar-1 {
+            width: 9px;
+            height: 26px;
+            background: #ffffff;
+            border-radius: 5px;
+        }
+
+        .brand-glyph .bar-2 {
+            width: 9px;
+            height: 20px;
+            background: #ffffff;
+            border-radius: 5px;
+        }
+
+        .brand-text-header {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-text-header .uni-name {
+            font-size: 16px;
             font-weight: 800;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
             color: #ffffff;
-            margin: 0 0 4px 0;
         }
 
-        .login-card-header p {
-            font-size: 13px;
-            color: #e2d2ea;
+        .brand-text-header .uni-tagline {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        /* Hero Welcome Content */
+        .welcome-hero-content {
+            margin: 36px 0;
+        }
+
+        .welcome-hero-title {
+            font-size: 54px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -1px;
+            line-height: 1.08;
             margin: 0;
-            font-weight: 500;
+        }
+
+        .welcome-accent-bar {
+            width: 46px;
+            height: 3.5px;
+            background: #ffffff;
+            border-radius: 2px;
+            margin: 20px 0 22px 0;
+            opacity: 0.9;
+        }
+
+        /* Student ID Card Management System Showcase Image */
+        .id-system-image-frame {
+            position: relative;
+            width: 100%;
+            max-width: 440px;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            box-shadow: 0 16px 38px rgba(0, 0, 0, 0.55), 0 0 25px rgba(139, 92, 246, 0.22);
+            background: rgba(18, 5, 28, 0.7);
+            margin: 18px 0 10px 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .id-system-image-frame:hover {
+            transform: translateY(-3px) scale(1.015);
+            box-shadow: 0 22px 50px rgba(0, 0, 0, 0.65), 0 0 35px rgba(233, 35, 94, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .id-system-img {
+            width: 100%;
+            height: auto;
+            max-height: 290px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .id-system-overlay-badge {
+            position: absolute;
+            bottom: 12px;
+            left: 14px;
+            right: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(18, 5, 28, 0.82);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #ffffff;
             letter-spacing: 0.3px;
         }
 
-        .security-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 10px;
-            background: rgba(212, 175, 55, 0.16);
-            border: 1px solid rgba(212, 175, 55, 0.35);
-            padding: 3px 10px;
-            border-radius: 14px;
-            font-size: 10.5px;
-            font-weight: 700;
-            color: var(--champagne-gold-light);
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-        }
-
-        .security-badge-dot {
+        .id-system-overlay-badge .badge-dot {
             width: 6px;
             height: 6px;
-            background: var(--champagne-gold);
+            background: #10b981;
             border-radius: 50%;
-            box-shadow: 0 0 6px var(--champagne-gold);
+            box-shadow: 0 0 6px #10b981;
+        }
+
+        /* Bottom Status Badge */
+        .welcome-footer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11.5px;
+            color: var(--text-subtle);
+            padding-top: 12px;
+        }
+
+        .status-dot-pulse {
+            width: 7px;
+            height: 7px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
         }
 
         /* ----------------------------------------------------------
-           ROLE TABS (Student Portal vs Admin Portal)
+           RIGHT COLUMN: FROSTED GLASS LOGIN BOX
            ---------------------------------------------------------- */
-        .tab-selector {
-            display: flex;
-            background: #f5eff8;
-            border-bottom: 1px solid var(--muted-lavender);
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 12px 14px;
-            font-size: 13.5px;
-            font-weight: 700;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: all 0.2s ease;
+        .showcase-right-panel {
+            flex: 0.95;
+            padding: 44px 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 7px;
+            position: relative;
+            z-index: 2;
         }
 
-        .tab-btn.active {
-            background: var(--ivory-surface);
-            color: var(--text-heading);
-            border-bottom: 2.5px solid var(--champagne-gold);
+        .glass-signin-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--card-glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--card-glass-border);
+            border-radius: 22px;
+            padding: 36px 32px;
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.36);
         }
 
-        .tab-btn:hover:not(.active) {
-            color: var(--rich-plum);
-            background: #ede3f2;
+        /* Sign in Title with Accent Underline on "in" */
+        .signin-header-box {
+            text-align: center;
+            margin-bottom: 24px;
         }
 
-        /* ----------------------------------------------------------
-           LOGIN FORM BODY & INPUTS
-           ---------------------------------------------------------- */
-        .login-form-body {
-            padding: 24px 22px;
-            box-sizing: border-box;
-            background: var(--ivory-surface);
+        .signin-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+            display: inline-block;
+            margin: 0;
+            position: relative;
         }
 
-        .form-group {
-            margin-bottom: 18px;
+        .signin-title .underline-in {
+            position: relative;
+            display: inline-block;
         }
 
-        .form-group label {
+        .signin-title .underline-in::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #ffffff;
+            border-radius: 2px;
+        }
+
+        /* Role Switcher Tabs (Student Portal vs Admin Portal) */
+        .portal-role-tabs {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+
+        .portal-role-tab {
+            flex: 1;
+            padding: 9px 12px;
             font-size: 13px;
             font-weight: 700;
-            color: var(--text-heading);
-        }
-
-        .form-group label span.sub-hint {
-            font-size: 11px;
-            font-weight: 500;
+            border: none;
+            background: transparent;
             color: var(--text-muted);
-        }
-
-        .input-wrapper {
-            position: relative;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.22s ease;
             display: flex;
             align-items: center;
-            width: 100%;
-            min-width: 0;
-            box-sizing: border-box;
+            justify-content: center;
+            gap: 6px;
         }
 
-        .input-icon {
-            position: absolute;
-            left: 13px;
-            color: var(--champagne-gold-dark);
-            font-size: 15px;
-            pointer-events: none;
-            transition: transform 0.2s ease;
+        .portal-role-tab.active {
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .form-control {
+        .portal-role-tab:hover:not(.active) {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Form Controls: Translucent Glass Pills */
+        .glass-form-group {
+            margin-bottom: 20px;
+        }
+
+        .glass-form-group label {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            padding-left: 6px;
+        }
+
+        .glass-form-group label .field-hint {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-subtle);
+        }
+
+        .glass-input-wrapper {
+            position: relative;
             width: 100%;
-            min-width: 0;
-            padding: 12px 14px 12px 40px;
-            border: 1.5px solid var(--muted-lavender);
-            border-radius: 9px;
+        }
+
+        .glass-pill-input {
+            width: 100%;
+            padding: 13px 20px;
+            background: var(--input-glass-bg);
+            border: 1px solid var(--input-glass-border);
+            border-radius: 28px;
             font-size: 14px;
             font-weight: 600;
-            color: var(--text-heading);
+            color: #ffffff;
             outline: none;
-            background: var(--soft-ivory);
-            transition: all 0.2s ease;
+            transition: all 0.22s ease;
             box-sizing: border-box;
         }
 
-        .form-control::placeholder {
-            color: #9f8ea5;
+        .glass-pill-input::placeholder {
+            color: rgba(255, 255, 255, 0.42);
             font-weight: 500;
         }
 
-        .form-control:focus {
-            background: #ffffff;
-            border-color: var(--rich-plum);
-            box-shadow: 0 0 0 3px rgba(74, 21, 75, 0.16);
+        .glass-pill-input:focus {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.14);
         }
 
-        .form-control:focus ~ .input-icon {
-            transform: scale(1.1);
-        }
-
-        /* Error Alert Banner: Soft Red */
-        .alert-message {
+        /* Real-Time Student Found Badge */
+        .student-found-badge {
             display: none;
-            padding: 10px 14px;
-            border-radius: 9px;
+            margin-top: 7px;
+            padding: 6px 14px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.45);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #a7f3d0;
+            align-items: center;
+            gap: 6px;
+            animation: badgeSlide 0.25s ease forwards;
+        }
+
+        .student-found-badge strong {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        @keyframes badgeSlide {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Error Alert Banner */
+        .glass-alert-banner {
+            display: none;
+            padding: 10px 16px;
+            border-radius: 14px;
             font-size: 12.5px;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             line-height: 1.4;
-            background: #fff1f2;
-            color: #9f1239;
-            border: 1.5px solid #fecdd3;
+            background: rgba(239, 68, 68, 0.24);
+            color: #fecdd3;
+            border: 1px solid rgba(239, 68, 68, 0.48);
+            backdrop-filter: blur(8px);
             animation: alertShake 0.3s ease-in-out;
         }
 
@@ -295,312 +653,524 @@
             75% { transform: translateX(3px); }
         }
 
-        /* Dynamic Student Found Badge */
-        .student-found-badge {
-            display: none;
-            margin-top: 6px;
-            padding: 6px 11px;
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #166534;
-            align-items: center;
-            gap: 6px;
-            animation: fadeIn 0.25s ease forwards;
-        }
-
-        .student-found-badge strong {
-            color: var(--rich-plum);
-            font-weight: 700;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Subtle Utility Links */
-        .portal-help-links {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 14px;
-            padding: 0 2px;
-        }
-
-        .portal-help-link {
-            font-size: 11.5px;
-            font-weight: 600;
-            color: var(--rich-plum);
-            text-decoration: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            transition: color 0.2s ease;
-            background: none;
-            border: none;
-            padding: 0;
-        }
-
-        .portal-help-link:hover {
-            color: var(--champagne-gold-dark);
-            text-decoration: underline;
-        }
-
-        /* ----------------------------------------------------------
-           PRIMARY BUTTON: RICH PLUM -> HOVER CHAMPAGNE GOLD
-           ---------------------------------------------------------- */
-        .btn-portal-submit {
+        /* Coral-Pink Gradient Submit Pill Button (Exact Match to Image) */
+        .btn-coral-submit {
             width: 100%;
-            background: linear-gradient(135deg, var(--rich-plum) 0%, var(--plum-accent) 100%);
+            background: linear-gradient(90deg, var(--coral-gradient-start) 0%, var(--coral-gradient-end) 100%);
             color: #ffffff;
-            border: 1.5px solid transparent;
-            padding: 13px 20px;
-            font-size: 14.5px;
+            border: none;
+            padding: 13.5px 22px;
+            font-size: 15px;
             font-weight: 700;
-            border-radius: 10px;
+            border-radius: 30px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            box-shadow: 0 6px 18px rgba(74, 21, 75, 0.32);
+            box-shadow: 0 8px 24px var(--coral-glow);
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            letter-spacing: 0.3px;
-            margin-top: 6px;
+            letter-spacing: 0.4px;
+            margin-top: 10px;
         }
 
-        /* Hover: Shifts smoothly to Champagne Gold with Deep Plum text */
-        .btn-portal-submit:hover {
-            background: linear-gradient(135deg, #c59b27 0%, var(--champagne-gold) 60%, #e6ca65 100%);
-            color: var(--midnight-plum);
-            border-color: #ecd58b;
+        .btn-coral-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.38);
+            filter: brightness(1.1);
+            box-shadow: 0 12px 30px var(--coral-glow);
         }
 
-        .btn-portal-submit:active {
+        .btn-coral-submit:active {
             transform: translateY(0);
-            box-shadow: 0 3px 10px rgba(74, 21, 75, 0.25);
         }
 
-        /* ----------------------------------------------------------
-           RESPONSIVE MOBILE STYLING
-           ---------------------------------------------------------- */
-        @media (max-width: 480px) {
-            body.login-page-body {
-                padding: 16px 12px;
-                display: block;
-            }
-            .login-card-container {
-                max-width: 100%;
-                margin: 0 auto;
-            }
-            .login-card-header {
-                padding: 24px 16px 18px 16px;
-            }
-            .login-card-header h2 {
-                font-size: 20px;
-            }
-            .login-form-body {
-                padding: 20px 18px;
-            }
-            .tab-btn {
-                padding: 10px 8px;
-                font-size: 13px;
-            }
+        /* Social / Utility Icons Row Matching Image Bottom */
+        .glass-social-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 22px;
+            padding-top: 6px;
         }
 
-        /* Bottom Footer Info */
-        .portal-bottom-bar {
-            text-align: center;
-            margin-top: 18px;
-            font-size: 12px;
-            color: #bfaec9;
-        }
-
-        .portal-bottom-bar a {
-            color: var(--champagne-gold-light);
+        .social-circle-link {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 13px;
             text-decoration: none;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .social-circle-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-2px);
+        }
+
+        /* Subtle Utility Links */
+        .glass-help-links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 14px;
+            padding: 0 4px;
+        }
+
+        .glass-help-link {
+            font-size: 11.5px;
             font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
             transition: color 0.2s ease;
         }
 
-        .portal-bottom-bar a:hover {
+        .glass-help-link:hover {
             color: #ffffff;
             text-decoration: underline;
         }
+
+        /* ----------------------------------------------------------
+           RESPONSIVE MOBILE / TABLET ADAPTATION
+           ---------------------------------------------------------- */
+        @media (max-width: 900px) {
+            body.geometric-portal-body {
+                display: block;
+                padding: 16px 10px;
+                min-height: 100vh;
+                overflow-x: hidden;
+            }
+
+            .portal-showcase-card {
+                flex-direction: column;
+                width: 100%;
+                max-width: 440px;
+                margin: 0 auto;
+                min-height: auto;
+                box-sizing: border-box;
+            }
+
+            .showcase-left-panel {
+                flex: none;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 30px 18px 16px 18px;
+                text-align: center;
+                align-items: center;
+            }
+
+            .brand-crest-group {
+                justify-content: center;
+            }
+
+            .welcome-hero-content {
+                margin: 18px 0;
+            }
+
+            .welcome-hero-title {
+                font-size: 36px;
+            }
+
+            .welcome-accent-bar {
+                margin: 12px auto 14px auto;
+            }
+
+            .welcome-description {
+                margin: 0 auto 18px auto;
+                font-size: 13px;
+                max-width: 320px;
+            }
+
+            .btn-learn-more {
+                margin: 0 auto;
+                padding: 9px 22px;
+                font-size: 12.5px;
+            }
+
+            .welcome-footer-badge {
+                justify-content: center;
+                padding-top: 6px;
+            }
+
+            .showcase-right-panel {
+                flex: none;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 6px 12px 26px 12px;
+            }
+
+            .glass-signin-card {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                padding: 22px 16px;
+            }
+
+            .decor-wavy-svg {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body.geometric-portal-body {
+                padding: 10px 8px;
+            }
+
+            .portal-showcase-card {
+                border-radius: 18px;
+            }
+
+            .showcase-left-panel {
+                padding: 24px 14px 12px 14px;
+            }
+
+            .welcome-hero-title {
+                font-size: 30px;
+            }
+
+            .showcase-right-panel {
+                padding: 4px 8px 20px 8px;
+            }
+
+            .glass-signin-card {
+                padding: 18px 12px;
+                border-radius: 16px;
+            }
+
+            .signin-title {
+                font-size: 24px;
+            }
+
+            .glass-pill-input {
+                padding: 10px 14px;
+                font-size: 13px;
+                min-width: 0;
+            }
+
+            .portal-role-tab {
+                font-size: 11px;
+                padding: 7px 4px;
+                gap: 4px;
+            }
+        }
     </style>
 </head>
-<body class="login-page-body">
+<body class="geometric-portal-body">
 
-<div class="login-card-container">
+<!-- =======================================================
+     ABSTRACT BACKGROUND GEOMETRIC ELEMENTS (Matching Image)
+     ======================================================= -->
+<div class="bg-decorations" aria-hidden="true">
+    <!-- Slanted capsules -->
+    <div class="decor-capsule-1"></div>
+    <div class="decor-capsule-2"></div>
+    <div class="decor-capsule-3"></div>
 
-    <div class="login-card">
+    <!-- Vertical accent lines -->
+    <div class="decor-vert-line-1"></div>
+    <div class="decor-vert-line-2"></div>
 
-        <!-- =======================================================
-             CARD HEADER: UNIVERSITY NAME & SUBTITLE
-             ======================================================= -->
-        <div class="login-card-header">
-            <div class="brand-crest">JU</div>
-            <h2>Joy University</h2>
-            <p>Student ID Card Management System</p>
-            <div class="security-badge">
-                <span class="security-badge-dot"></span>
-                <span>Secure Student Portal</span>
+    <!-- Glowing ambient spheres -->
+    <div class="decor-glow-sphere-1"></div>
+    <div class="decor-glow-sphere-2"></div>
+
+    <!-- Floating Stylized Student Smart ID Card 1 (Top Left) -->
+    <div class="bg-idcard-floating-1">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="wire-card-chip"></div>
+            <span style="font-size:9.5px; color:rgba(255,255,255,0.45); font-weight:700; letter-spacing:0.5px;">JOY UNIVERSITY</span>
+        </div>
+        <div class="wire-card-lines">
+            <div class="wire-card-line" style="width: 70%;"></div>
+            <div class="wire-card-line" style="width: 45%;"></div>
+            <div class="wire-card-line" style="width: 60%;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+            <div class="wire-card-barcode">
+                <span></span><span style="width:3px"></span><span></span><span style="width:4px"></span><span></span><span style="width:2px"></span>
+            </div>
+            <span style="font-size:8px; color:rgba(255,255,255,0.35); font-weight:600;">ID: JU-2024</span>
+        </div>
+    </div>
+
+    <!-- Floating Stylized Student Smart ID Card 2 (Bottom Right) -->
+    <div class="bg-idcard-floating-2">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="wire-card-chip"></div>
+            <span style="font-size:10px; color:rgba(255,255,255,0.5); font-weight:700; letter-spacing:0.6px;">STUDENT PASS</span>
+        </div>
+        <div class="wire-card-lines">
+            <div class="wire-card-line" style="width: 65%;"></div>
+            <div class="wire-card-line" style="width: 80%;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+            <div class="wire-card-barcode">
+                <span></span><span style="width:4px"></span><span></span><span style="width:2px"></span><span></span><span style="width:3px"></span>
+            </div>
+            <span style="font-size:8.5px; color:rgba(233,35,94,0.7); font-weight:700;">RFID CHIP</span>
+        </div>
+    </div>
+
+    <!-- RFID Contactless Waves -->
+    <svg class="bg-rfid-waves" width="90" height="90" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="80" r="15" stroke="rgba(255, 255, 255, 0.3)" stroke-width="2.5" stroke-dasharray="4 4" />
+        <path d="M 20 45 A 35 35 0 0 1 55 80" stroke="rgba(233, 35, 94, 0.45)" stroke-width="3" stroke-linecap="round" />
+        <path d="M 20 25 A 55 55 0 0 1 75 80" stroke="rgba(168, 85, 247, 0.45)" stroke-width="3.5" stroke-linecap="round" />
+        <path d="M 20 5 A 75 75 0 0 1 95 80" stroke="rgba(255, 255, 255, 0.35)" stroke-width="4" stroke-linecap="round" />
+    </svg>
+
+    <!-- Smart Card Circuit Traces -->
+    <svg class="bg-circuits-svg" viewBox="0 0 450 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 20 280 L 120 280 L 160 240 L 260 240 L 280 220 L 380 220" stroke="rgba(168, 85, 247, 0.3)" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="380" cy="220" r="4" fill="rgba(233, 35, 94, 0.5)"/>
+        <path d="M 60 295 L 140 295 L 180 255 L 320 255" stroke="rgba(99, 102, 241, 0.25)" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="320" cy="255" r="3.5" fill="rgba(168, 85, 247, 0.5)"/>
+        <path d="M 0 240 L 80 240 L 110 210 L 210 210" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="210" cy="210" r="3" fill="rgba(255, 255, 255, 0.4)"/>
+    </svg>
+
+    <!-- Curved wavy lines SVG -->
+    <svg class="decor-wavy-svg" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 50 120 Q 150 40 250 120 T 450 120 T 600 80" stroke="rgba(168, 85, 247, 0.3)" stroke-width="4" stroke-linecap="round"/>
+        <path d="M 30 240 Q 180 180 300 250 T 520 230" stroke="rgba(192, 132, 252, 0.22)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M 280 80 Q 320 220 440 260" stroke="rgba(99, 102, 241, 0.25)" stroke-width="3.5" stroke-linecap="round"/>
+    </svg>
+</div>
+
+<!-- =======================================================
+     MAIN SHOWCASE CARD (CONTAINER)
+     ======================================================= -->
+<main class="portal-showcase-card">
+
+    <!-- ---------------------------------------------------
+         LEFT PANEL: BRAND & WELCOME HERO
+         --------------------------------------------------- -->
+    <section class="showcase-left-panel">
+        
+        <!-- Brand Mark (Two vertical pill bars matching image) -->
+        <div class="brand-crest-group">
+            <div class="brand-glyph" title="Joy University Logo">
+                <span class="bar-1"></span>
+                <span class="bar-2"></span>
+            </div>
+            <div class="brand-text-header">
+                <span class="uni-name">Joy University</span>
+                <span class="uni-tagline">Student ID Card Management System</span>
             </div>
         </div>
 
-        <!-- =======================================================
-             ROLE SWITCHER TABS: STUDENT PORTAL / ADMIN PORTAL
-             ======================================================= -->
-        <div class="tab-selector">
-            <button type="button" class="tab-btn active" id="tabStudent" onclick="switchRoleTab('student')">
-                🎓 Student Portal
-            </button>
-            <button type="button" class="tab-btn" id="tabAdmin" onclick="switchRoleTab('admin')">
-                🛡️ Admin Portal
-            </button>
+        <!-- Hero Content -->
+        <div class="welcome-hero-content">
+            <h1 class="welcome-hero-title">Welcome!</h1>
+            <div class="welcome-accent-bar"></div>
+            
+            <!-- Student ID Card Management System Showcase Graphic -->
+            <div class="id-system-image-frame">
+                <img src="id_card_visual.jpg" alt="Joy University Student ID Card Management System" class="id-system-img">
+                <div class="id-system-overlay-badge">
+                    <span class="badge-dot"></span>
+                    <span>RFID & Biometric ID Authentication System</span>
+                </div>
+            </div>
         </div>
 
-        <!-- =======================================================
-             1. STUDENT LOGIN SECTION
-             ======================================================= -->
-        <div id="studentLoginSection" class="login-form-body">
-            
-            <!-- Clean Error Alert -->
-            <div id="studentAlert" class="alert-message" role="alert"></div>
+        <!-- Footer System Status -->
+        <div class="welcome-footer-badge">
+            <span class="status-dot-pulse"></span>
+            <span>Joy University ID System Node • ISO/IEC 7810 Verified</span>
+        </div>
 
-            <form id="studentLoginForm" onsubmit="handleStudentLogin(event)" autocomplete="off">
+    </section>
+
+    <!-- ---------------------------------------------------
+         RIGHT PANEL: FROSTED GLASS LOGIN CARD
+         --------------------------------------------------- -->
+    <section class="showcase-right-panel">
+        <div class="glass-signin-card">
+            
+            <!-- Sign in Header with Underline on "in" -->
+            <div class="signin-header-box">
+                <h2 class="signin-title">Sign <span class="underline-in">in</span></h2>
+            </div>
+
+            <!-- Portal Switcher Tabs: Student Portal vs Admin Portal -->
+            <div class="portal-role-tabs">
+                <button type="button" class="portal-role-tab active" id="tabStudent" onclick="switchPortal('student')">
+                    🎓 Student Portal
+                </button>
+                <button type="button" class="portal-role-tab" id="tabAdmin" onclick="switchPortal('admin')">
+                    🛡️ Admin Portal
+                </button>
+            </div>
+
+            <!-- ===============================================
+                 1. STUDENT LOGIN FORM
+                 =============================================== -->
+            <div id="studentSection">
                 
-                <!-- Student ID Input -->
-                <div class="form-group">
-                    <label for="studentId">
-                        <span>Student ID</span>
-                        <span class="sub-hint">Roll Number</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">🪪</span>
-                        <input
-                            type="text"
-                            id="studentId"
-                            class="form-control"
-                            placeholder="e.g. 2025BTAM424"
-                            required
-                            autofocus
-                            oninput="handleStudentIdInput(this.value)"
-                        >
-                    </div>
-                    <div id="studentFoundBadge" class="student-found-badge">
-                        <span>Student Found ✓</span>
-                        <strong id="studentFoundName"></strong>
-                    </div>
-                </div>
+                <!-- Clean Error Alert Banner -->
+                <div id="studentAlert" class="glass-alert-banner" role="alert"></div>
 
-                <!-- Date of Birth Input -->
-                <div class="form-group">
-                    <label for="dob">
-                        <span>Date of Birth</span>
-                        <span class="sub-hint">Password (DD/MM/YYYY)</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">📅</span>
-                        <input
-                            type="text"
-                            id="dob"
-                            class="form-control"
-                            placeholder="DD/MM/YYYY"
-                            required
-                        >
+                <form id="studentLoginForm" onsubmit="handleStudentLogin(event)" autocomplete="off">
+                    
+                    <!-- User Name: Student Roll Number -->
+                    <div class="glass-form-group">
+                        <label for="studentId">
+                            <span>User Name</span>
+                            <span class="field-hint">Student Roll Number</span>
+                        </label>
+                        <div class="glass-input-wrapper">
+                            <input
+                                type="text"
+                                id="studentId"
+                                class="glass-pill-input"
+                                placeholder="e.g. 2025BTAM424"
+                                required
+                                autofocus
+                                oninput="handleStudentIdInput(this.value)"
+                            >
+                        </div>
+                        <div id="studentFoundBadge" class="student-found-badge">
+                            <span>✓ Student Found:</span>
+                            <strong id="studentFoundName"></strong>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Login Button -->
-                <button type="submit" id="btnStudentLogin" class="btn-portal-submit">
-                    <span>Access My Digital ID</span>
-                    <span style="font-size: 16px;">→</span>
-                </button>
+                    <!-- Password: Date of Birth -->
+                    <div class="glass-form-group">
+                        <label for="dob">
+                            <span>Password</span>
+                            <span class="field-hint">DOB (DD/MM/YYYY)</span>
+                        </label>
+                        <div class="glass-input-wrapper">
+                            <input
+                                type="text"
+                                id="dob"
+                                class="glass-pill-input"
+                                placeholder="DD/MM/YYYY"
+                                required
+                            >
+                        </div>
+                    </div>
 
-                <!-- Subtle Links: Verify Student ID / Help & Support -->
-                <div class="portal-help-links">
-                    <button type="button" class="portal-help-link" onclick="quickVerifyId()">
-                        <span>🔍 Verify Student ID</span>
+                    <!-- Coral-Pink Submit Pill Button -->
+                    <button type="submit" id="btnStudentSubmit" class="btn-coral-submit">
+                        <span>Submit</span>
                     </button>
-                    <button type="button" class="portal-help-link" onclick="showHelpModal()">
-                        <span>💬 Help / Support</span>
+
+                    <!-- Utility Help Links -->
+                    <div class="glass-help-links">
+                        <button type="button" class="glass-help-link" onclick="quickVerifyId()">
+                            🔍 Verify Student ID
+                        </button>
+                        <button type="button" class="glass-help-link" onclick="showHelpModal()">
+                            💬 Help / Support
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- ===============================================
+                 2. ADMIN LOGIN FORM
+                 =============================================== -->
+            <div id="adminSection" style="display: none;">
+                
+                <!-- Clean Error Alert Banner -->
+                <div id="adminAlert" class="glass-alert-banner" role="alert"></div>
+
+                <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" autocomplete="off">
+                    
+                    <!-- User Name: Admin Username -->
+                    <div class="glass-form-group">
+                        <label for="adminUser">
+                            <span>User Name</span>
+                            <span class="field-hint">Administrator</span>
+                        </label>
+                        <div class="glass-input-wrapper">
+                            <input
+                                type="text"
+                                id="adminUser"
+                                class="glass-pill-input"
+                                placeholder="admin"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Password: Admin Password -->
+                    <div class="glass-form-group">
+                        <label for="adminPass">
+                            <span>Password</span>
+                            <span class="field-hint">••••••••</span>
+                        </label>
+                        <div class="glass-input-wrapper">
+                            <input
+                                type="password"
+                                id="adminPass"
+                                class="glass-pill-input"
+                                placeholder="admin123"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Coral-Pink Submit Pill Button -->
+                    <button type="submit" id="btnAdminSubmit" class="btn-coral-submit">
+                        <span>Submit</span>
                     </button>
-                </div>
-            </form>
+
+                    <div class="glass-help-links">
+                        <span style="font-size: 11.5px; color: var(--text-subtle);">Joy Admin Console</span>
+                        <button type="button" class="glass-help-link" onclick="showHelpModal()">
+                            💬 Admin Help
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Social / Utility Circular Icons Row (Matching Reference Image) -->
+            <div class="glass-social-row">
+                <a href="javascript:void(0)" class="social-circle-link" onclick="showHelpModal()" title="Help & Information">
+                    <span>?</span>
+                </a>
+                <a href="index.html" class="social-circle-link" title="Student ID Card Preview">
+                    <span>🪪</span>
+                </a>
+                <a href="javascript:void(0)" class="social-circle-link" onclick="quickVerifyId()" title="Quick Verification">
+                    <span>✓</span>
+                </a>
+            </div>
 
         </div>
+    </section>
 
-        <!-- =======================================================
-             2. ADMIN LOGIN SECTION
-             ======================================================= -->
-        <div id="adminLoginSection" class="login-form-body" style="display: none;">
-            
-            <div id="adminAlert" class="alert-message" role="alert"></div>
-
-            <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" autocomplete="off">
-                <div class="form-group">
-                    <label for="adminUser">Administrator Username</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">👤</span>
-                        <input
-                            type="text"
-                            id="adminUser"
-                            class="form-control"
-                            placeholder="admin"
-                            required
-                        >
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="adminPass">Password</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">🔒</span>
-                        <input
-                            type="password"
-                            id="adminPass"
-                            class="form-control"
-                            placeholder="••••••••"
-                            required
-                        >
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-portal-submit">
-                    <span>Enter Admin Portal</span>
-                    <span style="font-size: 16px;">→</span>
-                </button>
-            </form>
-
-        </div>
-
-    </div>
-
-    <!-- Bottom Footer Notice -->
-    <div class="portal-bottom-bar">
-        Joy University ID Management System • <a href="index.html">Preview ID Card</a>
-    </div>
-
-</div>
+</main>
 
 <!-- Core System Script -->
 <script src="script.js"></script>
 <script>
     // -------------------------------------------------------------
-    // ROLE TAB SWITCHING (Student vs Admin)
+    // PORTAL ROLE SWITCHING (Student vs Admin)
     // -------------------------------------------------------------
-    function switchRoleTab(role) {
+    function switchPortal(role) {
         const tabStudent = document.getElementById("tabStudent");
         const tabAdmin = document.getElementById("tabAdmin");
-        const studentSec = document.getElementById("studentLoginSection");
-        const adminSec = document.getElementById("adminLoginSection");
+        const studentSec = document.getElementById("studentSection");
+        const adminSec = document.getElementById("adminSection");
 
         hideAlerts();
 
@@ -620,8 +1190,10 @@
     }
 
     function hideAlerts() {
-        document.getElementById("studentAlert").style.display = "none";
-        document.getElementById("adminAlert").style.display = "none";
+        const sAlert = document.getElementById("studentAlert");
+        const aAlert = document.getElementById("adminAlert");
+        if (sAlert) sAlert.style.display = "none";
+        if (aAlert) aAlert.style.display = "none";
     }
 
     // -------------------------------------------------------------
@@ -651,7 +1223,7 @@
     function quickVerifyId() {
         const val = document.getElementById("studentId").value.trim().toUpperCase();
         if (!val) {
-            showStudentError("Please enter a Student ID to verify.");
+            showStudentError("Please enter a Student ID in the User Name field to verify.");
             document.getElementById("studentId").focus();
             return;
         }
@@ -659,14 +1231,14 @@
         const match = students.find(s => s.studentId.toUpperCase() === val);
         if (match) {
             handleStudentIdInput(val);
-            alert(`✓ Verified Student Record:\n• Name: ${match.name}\n• ID: ${match.studentId}\n• Department: ${match.department}\n• Status: ${match.category}`);
+            alert(`✓ Verified Student Record:\n\n• Name: ${match.name}\n• Roll No: ${match.studentId}\n• Department: ${match.department}\n• Category: ${match.category}\n• Card Status: ${match.status || 'Active'}`);
         } else {
             showStudentError(`Student ID "${val}" was not found in university records.`);
         }
     }
 
     function showHelpModal() {
-        alert("Joy University ID Card Portal Help:\n\n• Student ID: Enter your university roll number (e.g. 2025BTAM424).\n• Password: Enter your Date of Birth in DD/MM/YYYY format.\n\nFor technical assistance or profile corrections, contact support@joyuniversity.edu.in");
+        alert("Joy University Student ID Management Portal\n\n• Student Sign In:\n  User Name: Your Student Roll Number (e.g. 2025BTAM424)\n  Password: Date of Birth in DD/MM/YYYY format\n\n• Admin Sign In:\n  User Name: admin\n  Password: admin123\n\nFor support or details updates, contact: support@joyuniversity.edu.in");
     }
 
     // -------------------------------------------------------------
@@ -674,14 +1246,13 @@
     // -------------------------------------------------------------
     function handleStudentLogin(e) {
         e.preventDefault();
-        const alertBox = document.getElementById("studentAlert");
-        alertBox.style.display = "none";
+        hideAlerts();
 
         const id = document.getElementById("studentId").value.trim().toUpperCase();
         const dob = document.getElementById("dob").value.trim();
 
         if (!id) {
-            showStudentError("Please enter your Student ID.");
+            showStudentError("Please enter your Student Roll Number.");
             return;
         }
         if (!dob) {
@@ -691,12 +1262,11 @@
 
         const result = Auth.loginStudent(id, dob);
         if (result.success && result.student) {
-            // Save logged-in student in localStorage key "loggedInUser"
             localStorage.setItem("loggedInUser", result.student.studentId);
             localStorage.setItem("userRole", "student");
 
-            const submitBtn = document.getElementById("btnStudentLogin");
-            submitBtn.innerHTML = `<span>✓ Verified! Redirecting...</span>`;
+            const submitBtn = document.getElementById("btnStudentSubmit");
+            submitBtn.innerHTML = `<span>✓ Verified! Entering Portal...</span>`;
             submitBtn.style.background = "#10b981";
             submitBtn.disabled = true;
 
@@ -704,12 +1274,13 @@
                 window.location.href = "dashboard.html";
             }, 300);
         } else {
-            showStudentError(result.message || "Invalid Student ID or Date of Birth. Please check your credentials.");
+            showStudentError(result.message || "Invalid Student Roll Number or Date of Birth. Please check your credentials.");
         }
     }
 
     function showStudentError(msg) {
         const alertBox = document.getElementById("studentAlert");
+        if (!alertBox) return;
         alertBox.textContent = "⚠️ " + msg;
         alertBox.style.display = "block";
     }
@@ -719,8 +1290,7 @@
     // -------------------------------------------------------------
     function handleAdminLogin(e) {
         e.preventDefault();
-        const alertBox = document.getElementById("adminAlert");
-        alertBox.style.display = "none";
+        hideAlerts();
 
         const user = document.getElementById("adminUser").value.trim();
         const pass = document.getElementById("adminPass").value.trim();
@@ -729,8 +1299,18 @@
         if (result.success) {
             localStorage.setItem("loggedInUser", "ADMIN_001");
             localStorage.setItem("userRole", "admin");
-            window.location.href = "admin.html";
+            
+            const submitBtn = document.getElementById("btnAdminSubmit");
+            submitBtn.innerHTML = `<span>✓ Welcome Admin! Loading...</span>`;
+            submitBtn.style.background = "#10b981";
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                window.location.href = "admin.html";
+            }, 300);
         } else {
+            const alertBox = document.getElementById("adminAlert");
+            if (!alertBox) return;
             alertBox.textContent = "⚠️ " + (result.message || "Invalid administrator credentials (use admin / admin123).");
             alertBox.style.display = "block";
         }
@@ -742,10 +1322,10 @@
     window.addEventListener("DOMContentLoaded", function() {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get("role") === "admin") {
-            switchRoleTab("admin");
+            switchPortal("admin");
         }
 
-        // Test parameters for automated verification
+        // Test parameters support
         if (urlParams.get("testId")) {
             const tId = urlParams.get("testId");
             document.getElementById("studentId").value = tId;
