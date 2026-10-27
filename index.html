@@ -8,6 +8,49 @@
 </head>
 <body>
 
+<!-- BACKGROUND DECORATIONS -->
+<div class="bg-decorations">
+    <div class="decor-capsule-1"></div>
+    <div class="decor-capsule-2"></div>
+    <div class="decor-vert-line-1"></div>
+    <div class="decor-vert-line-2"></div>
+    <div class="decor-glow-sphere-1"></div>
+    <div class="decor-glow-sphere-2"></div>
+    <div class="bg-idcard-floating-1">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="wire-card-chip"></div>
+            <span style="font-size:10px; font-weight:800; color:#7c52b8; letter-spacing:0.5px;">JOY UNIV</span>
+        </div>
+        <div class="wire-card-lines">
+            <div class="wire-card-line" style="width:70%;"></div>
+            <div class="wire-card-line" style="width:50%;"></div>
+            <div class="wire-card-line" style="width:85%;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+            <div class="wire-card-barcode">
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <span style="font-size:8px; color:#9d7bd8; font-weight:700;">DIGITAL PASS</span>
+        </div>
+    </div>
+    <div class="bg-idcard-floating-2">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:10px; font-weight:800; color:#7c52b8;">STUDENT ID</span>
+            <div class="wire-card-chip"></div>
+        </div>
+        <div class="wire-card-lines">
+            <div class="wire-card-line" style="width:80%;"></div>
+            <div class="wire-card-line" style="width:60%;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+            <span style="font-size:8px; color:#9d7bd8; font-weight:700;">VALID 2024-2027</span>
+            <div class="wire-card-barcode">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <header class="app-header">
     <a href="dashboard.html" class="brand-section">
         <div class="brand-logo">JU</div>
@@ -19,20 +62,21 @@
 
     <div class="header-actions">
         <!-- Quick Student Switcher for Prototype Evaluation -->
-        <select id="quickStudentSelector" onchange="switchViewingStudent(this.value)" style="padding: 7px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.35); background: rgba(255,255,255,0.18); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; outline: none;">
+        <select id="quickStudentSelector" onchange="switchViewingStudent(this.value)" style="padding: 7px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.35); background: rgba(255,255,255,0.18); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; outline: none;">
             <!-- Options dynamically loaded -->
         </select>
 
-        <a href="dashboard.html#helpdeskSection" class="btn btn-outline-white btn-icon" title="Raise query or issue with admin">
-            💬 Helpdesk & Queries
-        </a>
-        <a href="dashboard.html" class="btn btn-secondary btn-icon">
+        <a href="dashboard.html" class="btn btn-outline-white btn-icon">
             ← Dashboard
         </a>
-        <a href="admin.html" class="btn btn-gold btn-icon">
+        <a href="dashboard.html#helpdeskSection" class="btn btn-outline-white btn-icon" title="Raise query or issue with admin">
+            💬 Helpdesk
+        </a>
+        <a href="admin.html" class="btn btn-outline-white btn-icon">
             🛡️ Admin Directory
         </a>
-        <button class="btn btn-danger btn-icon" onclick="Auth.logout()">
+        <button class="btn-logout" onclick="Auth.logout()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
             Sign Out
         </button>
     </div>
