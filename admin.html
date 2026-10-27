@@ -8,9 +8,52 @@
 </head>
 <body>
 
+<!-- BACKGROUND DECORATIONS -->
+<div class="bg-decorations">
+    <div class="decor-capsule-1"></div>
+    <div class="decor-capsule-2"></div>
+    <div class="decor-vert-line-1"></div>
+    <div class="decor-vert-line-2"></div>
+    <div class="decor-glow-sphere-1"></div>
+    <div class="decor-glow-sphere-2"></div>
+    <div class="bg-idcard-floating-1">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="wire-card-chip"></div>
+            <span style="font-size:10px; font-weight:800; color:#7c52b8; letter-spacing:0.5px;">JOY UNIV</span>
+        </div>
+        <div class="wire-card-lines">
+            <div class="wire-card-line" style="width:70%;"></div>
+            <div class="wire-card-line" style="width:50%;"></div>
+            <div class="wire-card-line" style="width:85%;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+            <div class="wire-card-barcode">
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <span style="font-size:8px; color:#9d7bd8; font-weight:700;">ADMIN CONSOLE</span>
+        </div>
+    </div>
+    <div class="bg-idcard-floating-2">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:10px; font-weight:800; color:#7c52b8;">OFFICIAL RECORDS</span>
+            <div class="wire-card-chip"></div>
+        </div>
+        <div class="wire-card-lines">
+            <div class="wire-card-line" style="width:80%;"></div>
+            <div class="wire-card-line" style="width:60%;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+            <span style="font-size:8px; color:#9d7bd8; font-weight:700;">DATABASE SYNC</span>
+            <div class="wire-card-barcode">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <header class="app-header">
     <a href="admin.html" class="brand-section">
-        <div class="brand-logo" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff;">JU</div>
+        <div class="brand-logo">JU</div>
         <div class="brand-text">
             <h1>Joy University</h1>
             <span>ID Card Administration Console</span>
@@ -18,17 +61,18 @@
     </a>
 
     <div class="header-actions">
-        <div class="user-badge" style="background: rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.5);">
-            <span class="status-dot" style="background: #f59e0b;"></span>
+        <div class="user-badge" style="background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.25);">
+            <span class="status-dot" style="background: #4ade80;"></span>
             <span>Admin Active</span>
         </div>
-        <a href="index.html" class="btn btn-secondary btn-icon">
+        <a href="index.html" class="btn btn-outline-white btn-icon">
             🎓 Student ID Preview
         </a>
         <button class="btn btn-outline-white btn-icon" onclick="resetDefaults()">
             🔄 Reset Sample Data
         </button>
-        <button class="btn btn-danger btn-icon" onclick="Auth.logout()">
+        <button class="btn-logout" onclick="Auth.logout()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
             Sign Out
         </button>
     </div>
@@ -460,6 +504,83 @@
     </div>
 </div>
 
+<!-- =======================================================
+     MODERN STUDENT ACTIONS DROPDOWN / POPUP
+     ======================================================= -->
+<div id="studentActionDropdown" class="student-action-menu" style="display: none;">
+    <div class="menu-header">
+        <img id="menuStudentAvatar" src="" class="menu-header-avatar" alt="Student">
+        <div class="menu-header-info">
+            <div id="menuStudentName" class="menu-header-name">Student Name</div>
+            <div id="menuStudentId" class="menu-header-id">ID: 2025BTAM424</div>
+        </div>
+    </div>
+    <div class="menu-divider"></div>
+    <button class="menu-item menu-item-view" onclick="executeCurrentStudentAction('view')">
+        <span class="menu-item-icon">🪪</span>
+        <div class="menu-item-text">
+            <span class="menu-item-title">View ID Card</span>
+            <span class="menu-item-desc">Open 3D interactive pass</span>
+        </div>
+        <span class="menu-item-arrow">→</span>
+    </button>
+    <button class="menu-item menu-item-edit" onclick="executeCurrentStudentAction('edit')">
+        <span class="menu-item-icon">✏️</span>
+        <div class="menu-item-text">
+            <span class="menu-item-title">Edit Student</span>
+            <span class="menu-item-desc">Modify details & address</span>
+        </div>
+        <span class="menu-item-arrow">→</span>
+    </button>
+    <button class="menu-item menu-item-delete" onclick="executeCurrentStudentAction('delete')">
+        <span class="menu-item-icon">🗑️</span>
+        <div class="menu-item-text">
+            <span class="menu-item-title">Delete Student</span>
+            <span class="menu-item-desc">Remove from university records</span>
+        </div>
+        <span class="menu-item-arrow">✕</span>
+    </button>
+</div>
+
+<!-- =======================================================
+     MODAL: CONFIRM STUDENT DELETION
+     ======================================================= -->
+<div class="modal-overlay" id="deleteConfirmModal">
+    <div class="modal-box" style="max-width: 480px;">
+        <div class="modal-header" style="background: linear-gradient(90deg, #dc2626 0%, #b91c1c 100%);">
+            <h3 style="display: flex; align-items: center; gap: 8px;">
+                ⚠️ Confirm Student Removal
+            </h3>
+            <button class="modal-close" onclick="closeDeleteConfirmModal()">&times;</button>
+        </div>
+        <div class="modal-body" style="text-align: center; padding: 24px 20px;">
+            <div style="width: 60px; height: 60px; border-radius: 50%; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px auto;">
+                🗑️
+            </div>
+            <h4 id="deleteConfirmStudentName" style="font-size: 17px; font-weight: 800; color: #1f2937; margin-bottom: 6px;">
+                Student Name
+            </h4>
+            <div id="deleteConfirmStudentId" style="font-family: monospace; font-size: 13px; color: #7c52b8; font-weight: 700; margin-bottom: 14px;">
+                2025BTAM424
+            </div>
+            <p style="font-size: 13.5px; color: #64748b; line-height: 1.5; margin-bottom: 12px;">
+                Are you sure you want to permanently delete this student record from the Joy University ID Card Management System?
+            </p>
+            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #991b1b; text-align: left;">
+                ⚠️ <strong>Warning:</strong> This will delete their official credentials, digital ID card access, and any associated query history.
+            </div>
+        </div>
+        <div class="modal-footer" style="justify-content: center; gap: 14px;">
+            <button type="button" class="btn btn-secondary" onclick="closeDeleteConfirmModal()" style="min-width: 110px;">
+                Cancel
+            </button>
+            <button type="button" class="btn btn-danger" id="btnConfirmDeleteStudent" onclick="handleConfirmedDelete()" style="min-width: 140px;">
+                🗑️ Delete Student
+            </button>
+        </div>
+    </div>
+</div>
+
 <script src="script.js"></script>
 <script>
     // Ensure admin authorization (auto-init for prototype evaluation)
@@ -572,9 +693,12 @@
             tr.innerHTML = `
                 <td>
                     <div class="table-student-cell">
-                        <img src="${photo}" class="table-avatar" alt="${st.name}">
+                        <img src="${photo}" class="table-avatar" alt="${st.name}" onclick="openStudentMenu(event, '${st.studentId}')" style="cursor: pointer;" title="Click to manage ${st.name}">
                         <div>
-                            <div class="table-student-name">${st.name}</div>
+                            <div class="table-student-name student-action-trigger" onclick="openStudentMenu(event, '${st.studentId}')" title="Click to View ID, Edit, or Delete">
+                                <span>${st.name}</span>
+                                <span class="name-action-indicator">▾</span>
+                            </div>
                             <div class="table-student-id">${st.studentId}</div>
                             <div style="font-size: 11px; color: #64748b; margin-top: 3px; max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${st.address || 'No address registered'}">
                                 📍 ${st.address || 'Address not registered'}
@@ -593,17 +717,9 @@
                         : '<span class="status-pill" style="background:#fef2f2;color:#991b1b;border:1px solid #fecaca;margin-left:4px;">Hostel</span>'}
                 </td>
                 <td style="text-align: right;">
-                    <div class="table-actions" style="justify-content: flex-end;">
-                        <button class="btn btn-secondary btn-icon" title="View Digital ID Card" onclick="viewStudentCard('${st.studentId}')">
-                            🪪 View ID
-                        </button>
-                        <button class="btn btn-secondary btn-icon" title="Edit Student & Address" onclick="openEditStudentModal('${st.studentId}')">
-                            ✏️ Edit
-                        </button>
-                        <button class="btn btn-danger btn-icon" title="Delete Student" onclick="confirmDeleteStudent('${st.studentId}', '${st.name}')">
-                            🗑️
-                        </button>
-                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="openStudentMenu(event, '${st.studentId}')" title="Manage ${st.name} (View ID, Edit, Delete)">
+                        ⚙️ Actions ▾
+                    </button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -713,12 +829,122 @@
         renderAdminDashboard();
     }
 
-    function confirmDeleteStudent(studentId, name) {
-        if (confirm(`Are you sure you want to remove ${name} (${studentId}) from Joy University ID records?`)) {
-            Storage.deleteStudent(studentId);
-            renderAdminDashboard();
+    // -------------------------------------------------------------
+    // STUDENT ACTION DROPDOWN / POPUP CONTROLLER
+    // -------------------------------------------------------------
+    let selectedStudentForAction = null;
+    let pendingDeleteStudentId = null;
+
+    function openStudentMenu(event, studentId) {
+        event.stopPropagation();
+        const student = Storage.getStudentById(studentId);
+        if (!student) return;
+
+        selectedStudentForAction = student;
+
+        const dropdown = document.getElementById("studentActionDropdown");
+        const avatarImg = document.getElementById("menuStudentAvatar");
+        const nameEl = document.getElementById("menuStudentName");
+        const idEl = document.getElementById("menuStudentId");
+
+        const photo = Storage.getPhoto(student.studentId) || generateSvgAvatar(student.name);
+        avatarImg.src = photo;
+        nameEl.textContent = student.name;
+        idEl.textContent = "ID: " + student.studentId;
+
+        dropdown.style.display = "flex";
+
+        // Position relative to clicked trigger
+        const target = event.currentTarget;
+        const rect = target.getBoundingClientRect();
+
+        const dropdownWidth = 290;
+        let left = rect.left;
+        if (left + dropdownWidth > window.innerWidth - 16) {
+            left = window.innerWidth - dropdownWidth - 16;
+        }
+        if (left < 16) left = 16;
+
+        let top = rect.bottom + 6;
+        const dropdownHeight = 230;
+        if (top + dropdownHeight > window.innerHeight - 16) {
+            if (rect.top - dropdownHeight - 6 > 70) {
+                top = rect.top - dropdownHeight - 6;
+            } else {
+                top = Math.max(70, window.innerHeight - dropdownHeight - 16);
+            }
+        }
+
+        dropdown.style.left = `${Math.round(left)}px`;
+        dropdown.style.top = `${Math.round(top)}px`;
+    }
+
+    function closeStudentMenu() {
+        const dropdown = document.getElementById("studentActionDropdown");
+        if (dropdown) {
+            dropdown.style.display = "none";
         }
     }
+
+    function executeCurrentStudentAction(action) {
+        if (!selectedStudentForAction) return;
+        const student = selectedStudentForAction;
+        closeStudentMenu();
+
+        if (action === 'view') {
+            viewStudentCard(student.studentId);
+        } else if (action === 'edit') {
+            openEditStudentModal(student.studentId);
+        } else if (action === 'delete') {
+            openDeleteConfirmModal(student.studentId, student.name);
+        }
+    }
+
+    function openDeleteConfirmModal(studentId, name) {
+        pendingDeleteStudentId = studentId;
+        document.getElementById("deleteConfirmStudentName").textContent = name;
+        document.getElementById("deleteConfirmStudentId").textContent = "ID: " + studentId;
+        document.getElementById("deleteConfirmModal").classList.add("active");
+    }
+
+    function closeDeleteConfirmModal() {
+        pendingDeleteStudentId = null;
+        document.getElementById("deleteConfirmModal").classList.remove("active");
+    }
+
+    function handleConfirmedDelete() {
+        if (!pendingDeleteStudentId) return;
+        Storage.deleteStudent(pendingDeleteStudentId);
+        closeDeleteConfirmModal();
+        renderAdminDashboard();
+    }
+
+    function confirmDeleteStudent(studentId, name) {
+        openDeleteConfirmModal(studentId, name);
+    }
+
+    // Close menu when clicking outside
+    document.addEventListener("click", function(event) {
+        const dropdown = document.getElementById("studentActionDropdown");
+        if (dropdown && dropdown.style.display !== "none") {
+            if (!dropdown.contains(event.target)) {
+                closeStudentMenu();
+            }
+        }
+    });
+
+    // Close on Escape key
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            closeStudentMenu();
+            closeDeleteConfirmModal();
+        }
+    });
+
+    // Close on window scroll
+    window.addEventListener("scroll", function() {
+        closeStudentMenu();
+    }, true);
 
     // -------------------------------------------------------------
     // STUDENT QUERIES & HELPDESK HANDLERS
