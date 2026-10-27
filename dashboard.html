@@ -8,6 +8,49 @@
 </head>
 <body>
 
+<!-- BACKGROUND DECORATIONS -->
+<div class="bg-decorations">
+    <div class="decor-capsule-1"></div>
+    <div class="decor-capsule-2"></div>
+    <div class="decor-vert-line-1"></div>
+    <div class="decor-vert-line-2"></div>
+    <div class="decor-glow-sphere-1"></div>
+    <div class="decor-glow-sphere-2"></div>
+    <div class="bg-idcard-floating-1">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="wire-card-chip"></div>
+            <span style="font-size:10px; font-weight:800; color:#7c52b8; letter-spacing:0.5px;">JOY UNIV</span>
+        </div>
+        <div class="wire-card-lines">
+            <div class="wire-card-line" style="width:70%;"></div>
+            <div class="wire-card-line" style="width:50%;"></div>
+            <div class="wire-card-line" style="width:85%;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+            <div class="wire-card-barcode">
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <span style="font-size:8px; color:#9d7bd8; font-weight:700;">DIGITAL PASS</span>
+        </div>
+    </div>
+    <div class="bg-idcard-floating-2">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:10px; font-weight:800; color:#7c52b8;">STUDENT ID</span>
+            <div class="wire-card-chip"></div>
+        </div>
+        <div class="wire-card-lines">
+            <div class="wire-card-line" style="width:80%;"></div>
+            <div class="wire-card-line" style="width:60%;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+            <span style="font-size:8px; color:#9d7bd8; font-weight:700;">VALID 2024-2027</span>
+            <div class="wire-card-barcode">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <header class="app-header">
     <a href="dashboard.html" class="brand-section">
         <div class="brand-logo">JU</div>
@@ -18,23 +61,59 @@
     </a>
 
     <div class="header-actions">
-        <div class="user-badge">
-            <span class="status-dot"></span>
-            <span id="headerStudentName">Student</span>
-        </div>
-        <a href="index.html" class="btn btn-gold btn-icon">
-            🪪 View ID Card
+        <a href="index.html" class="btn btn-outline-white btn-icon" title="View 3D Interactive ID Card">
+            🪪 ID Card
         </a>
         <a href="admin.html" class="btn btn-outline-white btn-icon" title="Switch to Administrative View">
-            🛡️ Admin Mode
+            🛡️ Admin
         </a>
-        <button class="btn btn-danger btn-icon" onclick="Auth.logout()">
-            Sign Out
+        <div class="header-user-profile">
+            <div class="header-user-avatar">👤</div>
+            <div class="header-user-text">
+                <span class="header-user-name">Welcome, <span id="headerStudentName">Student</span> ▾</span>
+                <span class="header-user-id" id="headerStudentId">ID: 2025BTAM424</span>
+            </div>
+        </div>
+        <button class="btn-logout" onclick="Auth.logout()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            Logout
         </button>
     </div>
 </header>
 
-<main class="main-content">
+<div class="app-layout-wrapper">
+    <!-- LEFT SIDEBAR (Matching Reference Image) -->
+    <aside class="app-sidebar">
+        <div class="sidebar-nav-list">
+            <a href="dashboard.html" class="sidebar-nav-item active">
+                <span class="nav-icon">🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="index.html" class="sidebar-nav-item">
+                <span class="nav-icon">🪪</span>
+                <span>My ID Card</span>
+            </a>
+            <a href="#profileSection" class="sidebar-nav-item">
+                <span class="nav-icon">🎓</span>
+                <span>Profile</span>
+            </a>
+            <a href="#helpdeskSection" class="sidebar-nav-item">
+                <span class="nav-icon">💬</span>
+                <span>Helpdesk</span>
+            </a>
+        </div>
+
+        <div class="sidebar-footer-brand">
+            <svg class="sidebar-shield-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="m9 12 2 2 4-4"/>
+            </svg>
+            <div style="font-size: 11px; color: #7c52b8;">Your Identity</div>
+            <div style="font-size: 12px; font-weight: 800; color: #5b3496;">Our Priority</div>
+        </div>
+    </aside>
+
+    <main class="main-content">
 
     <!-- WELCOME BANNER -->
     <div class="banner-panel">
@@ -48,7 +127,7 @@
     </div>
 
     <!-- STUDENT PROFILE & CREDENTIALS OVERVIEW -->
-    <div class="card-panel">
+    <div class="card-panel" id="profileSection">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
             <h3 style="color: var(--primary); font-size: 18px; font-weight: 700;">Student Credentials & Status</h3>
             <span class="status-pill status-active" id="badgeStatus">Active • Enrolled</span>
@@ -156,6 +235,7 @@
     </div>
 
 </main>
+</div>
 
 <!-- =======================================================
      MODAL: RAISE NEW QUERY / CORRECTION REQUEST
@@ -237,6 +317,9 @@
         const currentStudent = Storage.getStudentById(student.studentId) || student;
 
         document.getElementById("headerStudentName").textContent = currentStudent.name;
+        if (document.getElementById("headerStudentId")) {
+            document.getElementById("headerStudentId").textContent = "ID: " + currentStudent.studentId;
+        }
         document.getElementById("welcomeName").textContent = currentStudent.name;
         document.getElementById("profileFullName").textContent = currentStudent.name;
         document.getElementById("profileStudentId").textContent = currentStudent.studentId;
